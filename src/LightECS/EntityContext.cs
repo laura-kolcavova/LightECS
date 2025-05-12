@@ -7,30 +7,44 @@ public class EntityContext :
 {
     private readonly EntityStore _entityStore;
 
+    private readonly EntityPool _entityPool;
+
     private readonly Dictionary<Type, IComponentStoreBase> _componentStoresByType;
 
-    private uint _nextEntityId = 1;
-
-    public int TotalCount => _entityStore.Count;
+    private readonly ContextState _contextState;
 
     public EntityContext()
     {
         _entityStore = new EntityStore();
 
+        _entityPool = new EntityPool();
+
         _componentStoresByType = [];
+
+        _contextState = new ContextState();
     }
 
+    public int TotalCount => _entityStore.Count;
+
+    public IContextState State => _contextState;
+
+    /// <summary>
+    /// Creates a new entity with no components.
+    /// </summary>
+    /// <returns>A newly created entity.</returns>
     public Entity Create()
     {
-        var entity = new Entity(_nextEntityId);
-
-        _nextEntityId++;
+        var entity = _entityPool.Get();
 
         _entityStore.Add(entity);
 
         return entity;
     }
 
+    /// <summary>
+    /// Destroys an existing entity and removes all its components.
+    /// </summary>
+    /// <param name="entity">The entity to be destroyed.</param>
     public void Destroy(Entity entity)
     {
         foreach (var componentStoreBase in _componentStoresByType.Values)
@@ -39,6 +53,8 @@ public class EntityContext :
         }
 
         _entityStore.Remove(entity);
+
+        _entityPool.Return(entity);
     }
 
     public void DestroyAll()
@@ -52,6 +68,11 @@ public class EntityContext :
     public bool Exists(Entity entity)
     {
         return _entityStore.Contains(entity);
+    }
+
+    public IEntityStore UseStore()
+    {
+        return _entityStore;
     }
 
     public void Add<TComponent>(

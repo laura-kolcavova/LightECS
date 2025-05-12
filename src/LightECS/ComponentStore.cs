@@ -6,11 +6,13 @@ public class ComponentStore<TComponent> :
     IComponentStore<TComponent>
     where TComponent : IComponent
 {
+    public const int DefaultInitialCapacity = 128;
+
     private readonly Dictionary<uint, TComponent> _componentsByEntities;
 
     public ComponentStore()
     {
-        _componentsByEntities = [];
+        _componentsByEntities = new Dictionary<uint, TComponent>(DefaultInitialCapacity);
     }
 
     public int Count => _componentsByEntities.Count;

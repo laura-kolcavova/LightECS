@@ -4,6 +4,8 @@ public interface IEntityContext
 {
     public int TotalCount { get; }
 
+    public IContextState State { get; }
+
     public Entity Create();
 
     public void Destroy(
@@ -13,6 +15,8 @@ public interface IEntityContext
 
     public bool Exists(
       Entity entity);
+
+    public IEntityStore UseStore();
 
     public void Add<TComponent>(
         Entity entity,

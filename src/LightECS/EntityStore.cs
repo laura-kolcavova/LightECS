@@ -5,11 +5,13 @@ namespace LightECS;
 public class EntityStore :
     IEntityStore
 {
+    public const int DefaultInitialCapacity = 128;
+
     private readonly HashSet<Entity> _entities;
 
     public EntityStore()
     {
-        _entities = [];
+        _entities = new HashSet<Entity>(DefaultInitialCapacity);
     }
 
     public int Count => _entities.Count;
