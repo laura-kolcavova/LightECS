@@ -1,27 +1,41 @@
 ﻿namespace LightECS.Extensions;
 
 public class Pool<TValue> :
-    PoolBase<TValue>
+    IPool<TValue>
 {
-    private readonly Func<TValue> _valueFactory;
+    private readonly Func<TValue> _factory;
+
+    private readonly Queue<TValue> _queue;
 
     public Pool(
-        Func<TValue> valueFactory)
-        : base()
+        Func<TValue> factory)
     {
-        _valueFactory = valueFactory;
+        _factory = factory;
+        _queue = new Queue<TValue>();
     }
 
     public Pool(
-        Func<TValue> valueFactory,
+        Func<TValue> factory,
         int initialCapacity)
-        : base(initialCapacity)
     {
-        _valueFactory = valueFactory;
+        _factory = factory;
+        _queue = new Queue<TValue>(
+            initialCapacity);
     }
 
-    protected override TValue Create()
+    public TValue Get()
     {
-        return _valueFactory.Invoke();
+        if (_queue.TryDequeue(out var value))
+        {
+            return value;
+        }
+
+        return _factory.Invoke();
+    }
+
+    public void Return(
+        TValue value)
+    {
+        _queue.Append(value);
     }
 }

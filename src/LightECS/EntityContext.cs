@@ -1,23 +1,35 @@
 ﻿using LightECS.Abstractions;
+using LightECS.Extensions;
 
 namespace LightECS;
 
 public class EntityContext :
     IEntityContext
 {
+    public const int EntityStoreInitialCapacity = 128;
+
+    public const int EntityPoolInitialCapacity = 128;
+
+    public const int ComponentStoreInitialCapacity = 128;
+
     private readonly EntityStore _entityStore;
 
-    private readonly EntityPool _entityPool;
+    private readonly Pool<Entity> _entityPool;
 
     private readonly Dictionary<Type, IComponentStoreBase> _componentStoresByType;
 
     private readonly ContextState _contextState;
 
+    private uint _nextEntityId = 1;
+
     public EntityContext()
     {
-        _entityStore = new EntityStore();
+        _entityStore = new EntityStore(
+            EntityStoreInitialCapacity);
 
-        _entityPool = new EntityPool();
+        _entityPool = new Pool<Entity>(
+            CreateNewEntity,
+            EntityPoolInitialCapacity);
 
         _componentStoresByType = [];
 
@@ -166,7 +178,8 @@ public class EntityContext :
             return (ComponentStore<TComponent>)componentStoreBase;
         }
 
-        var componentStore = new ComponentStore<TComponent>();
+        var componentStore = new ComponentStore<TComponent>(
+            ComponentStoreInitialCapacity);
 
         _componentStoresByType[componentType] = componentStore;
 
@@ -187,5 +200,14 @@ public class EntityContext :
 
         throw new InvalidOperationException(
             $"Component store for {typeof(TComponent)} does not exist.");
+    }
+
+    private Entity CreateNewEntity()
+    {
+        var entity = new Entity(_nextEntityId);
+
+        _nextEntityId++;
+
+        return entity;
     }
 }
