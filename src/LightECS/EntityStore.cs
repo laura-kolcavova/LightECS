@@ -12,6 +12,12 @@ public class EntityStore :
         _entities = [];
     }
 
+    public EntityStore(int initialCapacity)
+    {
+        _entities = new HashSet<Entity>(
+            initialCapacity);
+    }
+
     public int Count => _entities.Count;
 
     public void Add(

@@ -13,6 +13,12 @@ public class ComponentStore<TComponent> :
         _componentsByEntities = [];
     }
 
+    public ComponentStore(int initialCapacity)
+    {
+        _componentsByEntities = new Dictionary<uint, TComponent>(
+            initialCapacity);
+    }
+
     public int Count => _componentsByEntities.Count;
 
     public void Add(
