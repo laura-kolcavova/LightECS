@@ -13,7 +13,8 @@ public class ComponentStore<TComponent> :
         _componentsByEntities = [];
     }
 
-    public ComponentStore(int initialCapacity)
+    public ComponentStore(
+        int initialCapacity)
     {
         _componentsByEntities = new Dictionary<uint, TComponent>(
             initialCapacity);
@@ -21,25 +22,11 @@ public class ComponentStore<TComponent> :
 
     public int Count => _componentsByEntities.Count;
 
-    public void Add(
+    public void Set(
         Entity entity,
         TComponent component)
     {
-        if (_componentsByEntities.ContainsKey(entity.Id))
-        {
-            throw new InvalidOperationException(
-                $"Entity {entity.Id} already has a component of type {typeof(TComponent)}.");
-        }
-
         _componentsByEntities[entity.Id] = component;
-    }
-
-    public IEnumerable<TComponent> AsEnumerable()
-    {
-        foreach (var component in _componentsByEntities.Values)
-        {
-            yield return component;
-        }
     }
 
     public TComponent Get(
@@ -58,7 +45,7 @@ public class ComponentStore<TComponent> :
 
     public bool TryGet(
         Entity entity,
-        out TComponent component)
+        out TComponent? component)
     {
         return _componentsByEntities.TryGetValue(
             entity.Id, out component!);
@@ -70,21 +57,22 @@ public class ComponentStore<TComponent> :
         return _componentsByEntities.ContainsKey(entity.Id);
     }
 
-    public void Remove(
+    public bool Remove(
         Entity entity)
     {
-        _componentsByEntities.Remove(entity.Id);
+        return _componentsByEntities.Remove(entity.Id);
     }
 
-    public void RemoveAll()
+    public void Clear()
     {
         _componentsByEntities.Clear();
     }
 
-    public void Replace(
-        Entity entity,
-        TComponent component)
+    public IEnumerable<TComponent> AsEnumerable()
     {
-        _componentsByEntities[entity.Id] = component;
+        foreach (var component in _componentsByEntities.Values)
+        {
+            yield return component;
+        }
     }
 }

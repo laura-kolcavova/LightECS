@@ -2,25 +2,35 @@
 
 public interface IEntityContext
 {
-    public int TotalCount { get; }
-
     public IContextState State { get; }
 
-    public Entity Create();
+    public int EntitiesCount { get; }
 
-    public void Destroy(
+    public IEntityStore UseEntityStore();
+
+    public Entity CreateEntity();
+
+    public void DestroyEntity(
         Entity entity);
 
-    public void DestroyAll();
+    public bool EntityExists(
+        Entity entity);
 
-    public bool Exists(
-      Entity entity);
+    public IComponentStore<TComponent> UseStore<TComponent>()
+        where TComponent : IComponent;
 
-    public IEntityStore UseStore();
-
-    public void Add<TComponent>(
+    public void Set<TComponent>(
         Entity entity,
         TComponent component)
+        where TComponent : IComponent;
+
+    public TComponent Get<TComponent>(
+        Entity entity)
+        where TComponent : IComponent;
+
+    public bool TryGet<TComponent>(
+        Entity entity,
+        out TComponent? component)
         where TComponent : IComponent;
 
     public int Count<TComponent>()
@@ -30,27 +40,7 @@ public interface IEntityContext
         Entity entity)
         where TComponent : IComponent;
 
-    public TComponent Get<TComponent>(
-        Entity entity)
-        where TComponent : IComponent;
-
-    public bool TryGet<TComponent>(
-        Entity entity,
-        out TComponent component)
-        where TComponent : IComponent;
-
-    public void Replace<TComponent>(
-        Entity entity,
-        TComponent component)
-        where TComponent : IComponent;
-
     public void Remove<TComponent>(
         Entity entity)
-        where TComponent : IComponent;
-
-    public void RemoveAll<TComponent>()
-        where TComponent : IComponent;
-
-    public IComponentStore<TComponent> UseStore<TComponent>()
         where TComponent : IComponent;
 }

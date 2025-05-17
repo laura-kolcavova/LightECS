@@ -8,11 +8,23 @@ namespace XunitTests;
 public sealed class EntityStoreTests
 {
     [Fact]
-    public void Add_NewEntity_IncreasesCount()
+    public void Count_ShouldBeZero_WhenEmpty()
     {
         // Arrange
         var store = new EntityStore();
 
+        // Act
+        var count = store.Count;
+
+        // Assert
+        Assert.Equal(0, count);
+    }
+
+    [Fact]
+    public void Add_ShouldIncreaseCount()
+    {
+        // Arrange
+        var store = new EntityStore();
         var entity = new Entity(1);
 
         // Act
@@ -20,66 +32,102 @@ public sealed class EntityStoreTests
 
         // Assert
         Assert.Equal(1, store.Count);
+        Assert.True(store.Contains(entity));
     }
 
     [Fact]
-    public void Add_DuplicateEntity_ThrowsInvalidOperationException()
+    public void Add_DuplicateEntity_ShouldThrow()
     {
         // Arrange
         var store = new EntityStore();
+        var entity = new Entity(42);
+        store.Add(entity);
 
-        var entity = new Entity(1);
+        // Act & Assert
+        Assert.Throws<InvalidOperationException>(() => store.Add(entity));
+    }
 
+    [Fact]
+    public void Contains_ShouldReturnTrue_WhenEntityExists()
+    {
+        // Arrange
+        var store = new EntityStore();
+        var entity = new Entity(5);
         store.Add(entity);
 
         // Act
-        var act = () => store.Add(entity);
+        var result = store.Contains(entity);
 
         // Assert
-        Assert.Throws<InvalidOperationException>(act);
+        Assert.True(result);
     }
 
     [Fact]
-    public void Contains_ReturnsTrue_IfEntityExists()
+    public void Contains_ShouldReturnFalse_WhenEntityNotExists()
     {
         // Arrange
         var store = new EntityStore();
+        var entity = new Entity(7);
 
-        var entity = new Entity(1);
+        // Act
+        var result = store.Contains(entity);
 
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void Remove_ShouldReturnTrue_WhenEntityExists()
+    {
+        // Arrange
+        var store = new EntityStore();
+        var entity = new Entity(10);
         store.Add(entity);
 
         // Act
-        var contains = store.Contains(entity);
+        var removed = store.Remove(entity);
 
         // Assert
-        Assert.True(contains);
+        Assert.True(removed);
+        Assert.False(store.Contains(entity));
     }
 
     [Fact]
-    public void Contains_ReturnsFalse_IfEntityDoesNotExist()
+    public void Remove_ShouldReturnFalse_WhenEntityNotExists()
     {
         // Arrange
         var store = new EntityStore();
-
-        var entity = new Entity(1);
+        var entity = new Entity(999);
 
         // Act
-        var contains = store.Contains(entity);
+        var removed = store.Remove(entity);
 
         // Assert
-        Assert.False(contains);
+        Assert.False(removed);
     }
 
     [Fact]
-    public void AsEnumerable_ReturnsAllEntities()
+    public void Clear_ShouldRemoveAllEntities()
     {
         // Arrange
         var store = new EntityStore();
+        store.Add(new Entity(1));
+        store.Add(new Entity(2));
 
+        // Act
+        store.Clear();
+
+        // Assert
+        Assert.Equal(0, store.Count);
+    }
+
+    [Fact]
+    public void AsEnumerable_ShouldReturnAllEntities()
+    {
+        // Arrange
+        var store = new EntityStore();
         var entity1 = new Entity(1);
         var entity2 = new Entity(2);
-
         store.Add(entity1);
         store.Add(entity2);
 
@@ -87,44 +135,20 @@ public sealed class EntityStoreTests
         var entities = store.AsEnumerable();
 
         // Assert
-        Assert.Contains(entity1, entities);
-        Assert.Contains(entity2, entities);
+        var list = new List<Entity>(entities);
+        Assert.Equal(2, list.Count);
+        Assert.Contains(entity1, list);
+        Assert.Contains(entity2, list);
     }
 
     [Fact]
-    public void Remove_DeletesEntity()
+    public void Constructor_WithInitialCapacity_ShouldCreateInstance()
     {
-        // Arrange
-        var store = new EntityStore();
-
-        var entity = new Entity(1);
-        store.Add(entity);
-
-        // Act
-        store.Remove(entity);
+        // Arrange & Act
+        var store = new EntityStore(100);
 
         // Assert
-        Assert.False(store.Contains(entity));
+        Assert.NotNull(store);
         Assert.Equal(0, store.Count);
-    }
-
-    [Fact]
-    public void RemoveAll_ClearsStore()
-    {
-        // Arrange
-        var store = new EntityStore();
-
-        var entity1 = new Entity(1);
-        var entity2 = new Entity(2);
-
-        store.Add(entity1);
-        store.Add(entity2);
-
-        // Act
-        store.RemoveAll();
-
-        // Assert
-        Assert.Equal(0, store.Count);
-        Assert.Empty(store.AsEnumerable());
     }
 }

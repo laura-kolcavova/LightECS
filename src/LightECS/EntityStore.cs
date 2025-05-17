@@ -12,7 +12,8 @@ public class EntityStore :
         _entities = [];
     }
 
-    public EntityStore(int initialCapacity)
+    public EntityStore(
+        int initialCapacity)
     {
         _entities = new HashSet<Entity>(
             initialCapacity);
@@ -43,13 +44,13 @@ public class EntityStore :
         }
     }
 
-    public void Remove(
+    public bool Remove(
         Entity entity)
     {
-        _entities.Remove(entity);
+        return _entities.Remove(entity);
     }
 
-    public void RemoveAll()
+    public void Clear()
     {
         _entities.Clear();
     }
