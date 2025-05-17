@@ -17,12 +17,14 @@ public class ContextState :
         _state.Clear();
     }
 
-    public bool Contains(string key)
+    public bool Contains(
+        string key)
     {
         return _state.ContainsKey(key);
     }
 
-    public TValue? Get<TValue>(string key)
+    public TValue? Get<TValue>(
+        string key)
     {
         if (_state.TryGetValue(
             key,
@@ -39,7 +41,8 @@ public class ContextState :
         return default;
     }
 
-    public TValue GetRequired<TValue>(string key)
+    public TValue GetRequired<TValue>(
+        string key)
     {
         if (_state.TryGetValue(
             key,
@@ -56,14 +59,17 @@ public class ContextState :
         throw new KeyNotFoundException($"Key '{key}' not found in context state.");
     }
 
-    public TValue Set<TValue>(string key, TValue value)
+    public TValue Set<TValue>(
+        string key,
+        TValue value)
     {
         _state[key] = value;
 
         return value;
     }
 
-    public void Unset(string key)
+    public void Unset(
+        string key)
     {
         _state.Remove(key);
     }

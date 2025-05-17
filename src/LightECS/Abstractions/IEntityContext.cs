@@ -1,7 +1,11 @@
-﻿namespace LightECS.Abstractions;
+﻿using LightECS.Events;
+
+namespace LightECS.Abstractions;
 
 public interface IEntityContext
 {
+    public event EntityCreatedEventHandler? EntityCreated;
+
     public IContextState State { get; }
 
     public int EntitiesCount { get; }

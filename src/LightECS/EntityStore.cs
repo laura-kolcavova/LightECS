@@ -1,4 +1,5 @@
 ﻿using LightECS.Abstractions;
+using LightECS.Events;
 
 namespace LightECS;
 
@@ -6,6 +7,10 @@ public class EntityStore :
     IEntityStore
 {
     private readonly HashSet<Entity> _entities;
+
+    public event EntityAddedEventHandler? EntityAdded;
+
+    public event EntityRemovedEventHandler? EntityRemoved;
 
     public EntityStore()
     {
@@ -29,29 +34,36 @@ public class EntityStore :
             throw new InvalidOperationException(
                 $"Entity {entity.Id} is already present in the store.");
         }
+
+        EntityAdded?.Invoke(entity);
     }
 
-    public bool Contains(Entity entity)
+    public bool Contains(
+        Entity entity)
     {
         return _entities.Contains(entity);
-    }
-
-    public IEnumerable<Entity> AsEnumerable()
-    {
-        foreach (var entity in _entities)
-        {
-            yield return entity;
-        }
     }
 
     public bool Remove(
         Entity entity)
     {
-        return _entities.Remove(entity);
+        if (!_entities.Remove(entity))
+        {
+            return false;
+        }
+
+        EntityRemoved?.Invoke(entity);
+
+        return true;
     }
 
     public void Clear()
     {
         _entities.Clear();
+    }
+
+    public IEnumerable<Entity> AsEnumerable()
+    {
+        return _entities.AsEnumerable();
     }
 }

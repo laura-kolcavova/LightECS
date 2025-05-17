@@ -1,9 +1,18 @@
-﻿namespace LightECS.Abstractions;
+﻿using LightECS.Events;
+using System.Diagnostics.CodeAnalysis;
+
+namespace LightECS.Abstractions;
 
 public interface IComponentStore<TComponent>
     : IComponentStoreBase
     where TComponent : IComponent
 {
+    public event ComponentAddedEventHandler<TComponent>? ComponentAdded;
+
+    public event ComponentUpdatedEventHandler<TComponent>? ComponentUpdated;
+
+    public event ComponentRemovedEventHandler<TComponent>? ComponentRemoved;
+
     public void Set(
         Entity entity,
         TComponent component);
@@ -13,7 +22,7 @@ public interface IComponentStore<TComponent>
 
     public bool TryGet(
         Entity entity,
-        out TComponent? component);
+        [MaybeNullWhen(false)] out TComponent component);
 
     public IEnumerable<TComponent> AsEnumerable();
 }
