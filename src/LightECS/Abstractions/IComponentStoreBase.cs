@@ -2,11 +2,13 @@
 
 public interface IComponentStoreBase
 {
+    public int Count { get; }
+
     public bool Has(
         Entity entity);
 
-    public void Remove(
+    public bool Remove(
         Entity entity);
 
-    public void RemoveAll();
+    public void Clear();
 }

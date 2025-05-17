@@ -1,7 +1,6 @@
-﻿namespace LightECS.Extensions;
+﻿namespace LightECS.Utilities;
 
-public class Pool<TValue> :
-    IPool<TValue>
+internal sealed class Pool<TValue>
 {
     private readonly Func<TValue> _factory;
 

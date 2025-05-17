@@ -10,10 +10,10 @@ public interface IEntityStore
     public bool Contains(
         Entity entity);
 
-    public void Remove(
+    public bool Remove(
         Entity entity);
 
-    public void RemoveAll();
+    public void Clear();
 
     public IEnumerable<Entity> AsEnumerable();
 }

@@ -4,13 +4,7 @@ public interface IComponentStore<TComponent>
     : IComponentStoreBase
     where TComponent : IComponent
 {
-    public int Count { get; }
-
-    public void Add(
-        Entity entity,
-        TComponent component);
-
-    public void Replace(
+    public void Set(
         Entity entity,
         TComponent component);
 
@@ -19,7 +13,7 @@ public interface IComponentStore<TComponent>
 
     public bool TryGet(
         Entity entity,
-        out TComponent component);
+        out TComponent? component);
 
     public IEnumerable<TComponent> AsEnumerable();
 }
