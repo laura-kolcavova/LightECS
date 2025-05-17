@@ -1,4 +1,5 @@
 ﻿using LightECS.Abstractions;
+using LightECS.Events;
 using LightECS.Utilities;
 
 namespace LightECS;
@@ -21,6 +22,8 @@ public class EntityContext :
     private readonly ComponentStoreProvider _componentStoreProvider;
 
     private readonly ContextState _contextState;
+
+    public event EntityCreatedEventHandler? EntityCreated;
 
     public EntityContext()
     {
@@ -53,6 +56,8 @@ public class EntityContext :
         var entity = _entityPool.Get();
 
         _entityStore.Add(entity);
+
+        EntityCreated?.Invoke(entity);
 
         return entity;
     }

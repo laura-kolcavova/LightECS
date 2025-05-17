@@ -1,7 +1,13 @@
-﻿namespace LightECS.Abstractions;
+﻿using LightECS.Events;
+
+namespace LightECS.Abstractions;
 
 public interface IEntityStore
 {
+    public event EntityAddedEventHandler? EntityAdded;
+
+    public event EntityRemovedEventHandler? EntityRemoved;
+
     public int Count { get; }
 
     public void Add(

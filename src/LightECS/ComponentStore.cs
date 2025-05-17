@@ -1,4 +1,6 @@
 ﻿using LightECS.Abstractions;
+using LightECS.Events;
+using System.Diagnostics.CodeAnalysis;
 
 namespace LightECS;
 
@@ -7,6 +9,12 @@ public class ComponentStore<TComponent> :
     where TComponent : IComponent
 {
     private readonly Dictionary<uint, TComponent> _componentsByEntities;
+
+    public event ComponentAddedEventHandler<TComponent>? ComponentAdded;
+
+    public event ComponentUpdatedEventHandler<TComponent>? ComponentUpdated;
+
+    public event ComponentRemovedEventHandler<TComponent>? ComponentRemoved;
 
     public ComponentStore()
     {
@@ -26,7 +34,25 @@ public class ComponentStore<TComponent> :
         Entity entity,
         TComponent component)
     {
-        _componentsByEntities[entity.Id] = component;
+        if (_componentsByEntities.TryGetValue(
+            entity.Id,
+            out var existingComponent))
+        {
+            _componentsByEntities[entity.Id] = component;
+
+            ComponentUpdated?.Invoke(
+                entity,
+                existingComponent,
+                component);
+
+            return;
+        }
+
+        _componentsByEntities.Add(
+            entity.Id,
+            component);
+
+        ComponentAdded?.Invoke(entity, component);
     }
 
     public TComponent Get(
@@ -45,22 +71,33 @@ public class ComponentStore<TComponent> :
 
     public bool TryGet(
         Entity entity,
-        out TComponent? component)
+        [MaybeNullWhen(false)] out TComponent component)
     {
         return _componentsByEntities.TryGetValue(
-            entity.Id, out component!);
+            entity.Id,
+            out component);
     }
 
     public bool Has(
         Entity entity)
     {
-        return _componentsByEntities.ContainsKey(entity.Id);
+        return _componentsByEntities.ContainsKey(
+            entity.Id);
     }
 
     public bool Remove(
         Entity entity)
     {
-        return _componentsByEntities.Remove(entity.Id);
+        if (!_componentsByEntities.Remove(
+            entity.Id,
+            out var component))
+        {
+            return false;
+        }
+
+        ComponentRemoved?.Invoke(entity, component);
+
+        return true;
     }
 
     public void Clear()
@@ -70,9 +107,8 @@ public class ComponentStore<TComponent> :
 
     public IEnumerable<TComponent> AsEnumerable()
     {
-        foreach (var component in _componentsByEntities.Values)
-        {
-            yield return component;
-        }
+        return _componentsByEntities
+            .Values
+            .AsEnumerable();
     }
 }

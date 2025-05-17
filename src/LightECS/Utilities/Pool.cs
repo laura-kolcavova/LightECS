@@ -37,4 +37,9 @@ internal sealed class Pool<TValue>
     {
         _queue.Append(value);
     }
+
+    public bool Contains(TValue value)
+    {
+        return _queue.Contains(value);
+    }
 }

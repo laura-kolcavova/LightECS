@@ -42,8 +42,8 @@ internal sealed class ComponentStoreProvider
         var componentType = typeof(TComponent);
 
         if (_componentStoresByType.TryGetValue(
-           componentType,
-           out var componentStoreBase))
+            componentType,
+            out var componentStoreBase))
         {
             return (ComponentStore<TComponent>)componentStoreBase;
         }

@@ -10,12 +10,14 @@ public readonly struct Entity :
         Id = id;
     }
 
-    public bool Equals(Entity other)
+    public bool Equals(
+        Entity other)
     {
         return other.Id == Id;
     }
 
-    public override bool Equals(object? obj)
+    public override bool Equals(
+        object? obj)
     {
         if (obj is not Entity entity)
         {
