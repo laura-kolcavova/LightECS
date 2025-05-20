@@ -15,7 +15,7 @@ public class EntityContext :
 
     private readonly EntityStore _entityStore;
 
-    private readonly Pool<Entity> _entityPool;
+    private readonly EntityPool _entityPool;
 
     private readonly EntityUniqueIdProvider _entityUniqueIdProvider;
 
@@ -30,7 +30,7 @@ public class EntityContext :
         _entityStore = new EntityStore(
             InitialEntityStoreCapacity);
 
-        _entityPool = new Pool<Entity>(
+        _entityPool = new EntityPool(
             CreateNewEntity,
             InitialEntityPoolCapacity);
 

@@ -24,7 +24,7 @@ public sealed class ContextStateTests
     }
 
     [Fact]
-    public void Get_ShouldReturnStoredValue()
+    public void Get_ShouldReturnValue_WhenKeyExists()
     {
         // Arrange
         var state = new ContextState();
@@ -40,17 +40,14 @@ public sealed class ContextStateTests
     }
 
     [Fact]
-    public void Get_ShouldReturnDefault_WhenKeyDoesNotExist()
+    public void Get_ShouldThrowKeyNotFoundException_WhenKeyDoesNotExist()
     {
         // Arrange
         var state = new ContextState();
         var key = "nonexistent";
 
-        // Act
-        var result = state.Get<int>(key);
-
-        // Assert
-        Assert.Equal(default(int), result);
+        // Act & Assert
+        Assert.Throws<KeyNotFoundException>(() => state.Get<int>(key));
     }
 
     [Fact]
@@ -66,7 +63,7 @@ public sealed class ContextStateTests
     }
 
     [Fact]
-    public void GetRequired_ShouldReturnStoredValue()
+    public void TryGet_ShouldReturnTrue_AndOutputValue_WhenKeyExistsWithCorrectType()
     {
         // Arrange
         var state = new ContextState();
@@ -75,25 +72,30 @@ public sealed class ContextStateTests
         state.Set(key, value);
 
         // Act
-        var result = state.GetRequired<double>(key);
+        var success = state.TryGet<double>(key, out var result);
 
         // Assert
+        Assert.True(success);
         Assert.Equal(value, result);
     }
 
     [Fact]
-    public void GetRequired_ShouldThrowKeyNotFoundException_WhenKeyMissing()
+    public void TryGet_ShouldReturnFalse_AndDefaultOut_WhenKeyDoesNotExist()
     {
         // Arrange
         var state = new ContextState();
         var key = "missing";
 
-        // Act & Assert
-        Assert.Throws<KeyNotFoundException>(() => state.GetRequired<string>(key));
+        // Act
+        var success = state.TryGet<int>(key, out var result);
+
+        // Assert
+        Assert.False(success);
+        Assert.Equal(default, result);
     }
 
     [Fact]
-    public void GetRequired_ShouldThrowInvalidCastException_WhenTypeMismatch()
+    public void TryGet_ShouldThrowInvalidCastException_WhenTypeMismatchOccurs()
     {
         // Arrange
         var state = new ContextState();
@@ -101,7 +103,7 @@ public sealed class ContextStateTests
         state.Set(key, true);
 
         // Act & Assert
-        Assert.Throws<InvalidCastException>(() => state.GetRequired<int>(key));
+        Assert.Throws<InvalidCastException>(() => state.TryGet<int>(key, out _));
     }
 
     [Fact]
