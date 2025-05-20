@@ -1,12 +1,15 @@
-﻿namespace LightECS.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace LightECS.Abstractions;
 
 public interface IContextState
 {
-    public TValue? Get<TValue>(
+    public TValue Get<TValue>(
         string key);
 
-    public TValue GetRequired<TValue>(
-        string key);
+    public bool TryGet<TValue>(
+        string key,
+        [MaybeNullWhen(false)] out TValue value);
 
     public TValue Set<TValue>(
         string key,

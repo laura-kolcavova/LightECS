@@ -1,4 +1,5 @@
 ﻿using LightECS.Abstractions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace LightECS;
 
@@ -23,40 +24,45 @@ public class ContextState :
         return _state.ContainsKey(key);
     }
 
-    public TValue? Get<TValue>(
+    public TValue Get<TValue>(
         string key)
     {
-        if (_state.TryGetValue(
+        if (!_state.TryGetValue(
             key,
             out var value))
         {
-            if (value is not TValue typedValue)
-            {
-                throw new InvalidCastException($"Stored value for key '{key}' is not of type {typeof(TValue).Name}.");
-            }
-
-            return typedValue;
+            throw new KeyNotFoundException($"Key '{key}' not found in context state.");
         }
 
-        return default;
+        if (value is not TValue typedValue)
+        {
+            throw new InvalidCastException($"Stored value for key '{key}' is not of type {typeof(TValue).Name}.");
+        }
+
+        return typedValue;
     }
 
-    public TValue GetRequired<TValue>(
-        string key)
+    public bool TryGet<TValue>(
+        string key,
+        [MaybeNullWhen(false)] out TValue value)
     {
-        if (_state.TryGetValue(
+        if (!_state.TryGetValue(
             key,
-            out var value))
+            out var objectValue))
         {
-            if (value is not TValue typedValue)
-            {
-                throw new InvalidCastException($"Stored value for key '{key}' is not of type {typeof(TValue).Name}.");
-            }
+            value = default;
 
-            return typedValue;
+            return false;
         }
 
-        throw new KeyNotFoundException($"Key '{key}' not found in context state.");
+        if (objectValue is not TValue typedValue)
+        {
+            throw new InvalidCastException($"Stored value for key '{key}' is not of type {typeof(TValue).Name}.");
+        }
+
+        value = typedValue;
+
+        return true;
     }
 
     public TValue Set<TValue>(

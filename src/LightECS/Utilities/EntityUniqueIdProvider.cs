@@ -2,6 +2,8 @@
 
 internal sealed class EntityUniqueIdProvider
 {
+    private readonly object _lock = new();
+
     private uint _nextEntityId = 0;
 
     public uint GetCurrentId()
@@ -11,6 +13,9 @@ internal sealed class EntityUniqueIdProvider
 
     public uint GetNextId()
     {
-        return ++_nextEntityId;
+        lock (_lock)
+        {
+            return ++_nextEntityId;
+        }
     }
 }
