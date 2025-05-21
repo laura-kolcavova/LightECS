@@ -82,6 +82,7 @@ public class EntityStore :
 
     public IEnumerable<Entity> AsEnumerable()
     {
+        // TODO: thread safe enumeration
         return _entities.AsEnumerable();
     }
 }

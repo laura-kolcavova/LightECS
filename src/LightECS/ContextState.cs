@@ -8,6 +8,8 @@ public class ContextState :
 {
     private readonly Dictionary<string, object?> _state;
 
+    private readonly object _lock = new();
+
     public ContextState()
     {
         _state = [];
@@ -15,7 +17,10 @@ public class ContextState :
 
     public void Clear()
     {
-        _state.Clear();
+        lock (_lock)
+        {
+            _state.Clear();
+        }
     }
 
     public bool Contains(
@@ -69,14 +74,20 @@ public class ContextState :
         string key,
         TValue value)
     {
-        _state[key] = value;
+        lock (_lock)
+        {
+            _state[key] = value;
 
-        return value;
+            return value;
+        }
     }
 
     public void Unset(
         string key)
     {
-        _state.Remove(key);
+        lock (_lock)
+        {
+            _state.Remove(key);
+        }
     }
 }

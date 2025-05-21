@@ -115,6 +115,7 @@ public class ComponentStore<TComponent> :
 
     public IEnumerable<TComponent> AsEnumerable()
     {
+        // TODO thread safe enumeration
         return _componentsByEntities
             .Values
             .AsEnumerable();
