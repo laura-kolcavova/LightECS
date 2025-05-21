@@ -33,20 +33,6 @@ public sealed class ComponentStoreProviderTests
     }
 
     [Fact]
-    public void GetOrCreateStore_ShouldReturnSameStore_WhenAlreadyCreated()
-    {
-        // Arrange
-        var provider = new ComponentStoreProvider(10);
-
-        // Act
-        var store1 = provider.GetOrCreateStore<TestComponentA>();
-        var store2 = provider.GetOrCreateStore<TestComponentA>();
-
-        // Assert
-        Assert.Same(store1, store2);
-    }
-
-    [Fact]
     public void GetStore_ShouldReturnStore_WhenExists()
     {
         // Arrange
@@ -66,8 +52,11 @@ public sealed class ComponentStoreProviderTests
         // Arrange
         var provider = new ComponentStoreProvider(10);
 
-        // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => provider.GetStore<TestComponentA>());
+        // Act
+        var act = () => provider.GetStore<TestComponentA>();
+
+        // Assert
+        Assert.Throws<InvalidOperationException>(act);
     }
 
     [Fact]

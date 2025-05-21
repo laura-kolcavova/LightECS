@@ -46,6 +46,11 @@ internal sealed class EntityPool
     {
         lock (_lock)
         {
+            if (_stack.Contains(value))
+            {
+                throw new InvalidOperationException("The entity has already been returned to the pool.");
+            }
+
             _stack.Push(value);
         }
     }

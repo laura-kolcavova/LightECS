@@ -25,6 +25,7 @@ public sealed class EntityStoreTests
     {
         // Arrange
         var store = new EntityStore();
+
         var entity = new Entity(1);
 
         // Act
@@ -40,11 +41,16 @@ public sealed class EntityStoreTests
     {
         // Arrange
         var store = new EntityStore();
+
         var entity = new Entity(42);
+
         store.Add(entity);
 
-        // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => store.Add(entity));
+        // Act
+        var act = () => store.Add(entity);
+
+        // Assert
+        Assert.Throws<InvalidOperationException>(act);
     }
 
     [Fact]
@@ -52,7 +58,9 @@ public sealed class EntityStoreTests
     {
         // Arrange
         var store = new EntityStore();
+
         var entity = new Entity(5);
+
         store.Add(entity);
 
         // Act
@@ -67,6 +75,7 @@ public sealed class EntityStoreTests
     {
         // Arrange
         var store = new EntityStore();
+
         var entity = new Entity(7);
 
         // Act
@@ -81,7 +90,9 @@ public sealed class EntityStoreTests
     {
         // Arrange
         var store = new EntityStore();
+
         var entity = new Entity(10);
+
         store.Add(entity);
 
         // Act
@@ -97,6 +108,7 @@ public sealed class EntityStoreTests
     {
         // Arrange
         var store = new EntityStore();
+
         var entity = new Entity(999);
 
         // Act
@@ -111,6 +123,7 @@ public sealed class EntityStoreTests
     {
         // Arrange
         var store = new EntityStore();
+
         store.Add(new Entity(1));
         store.Add(new Entity(2));
 
@@ -126,8 +139,10 @@ public sealed class EntityStoreTests
     {
         // Arrange
         var store = new EntityStore();
+
         var entity1 = new Entity(1);
         var entity2 = new Entity(2);
+
         store.Add(entity1);
         store.Add(entity2);
 
