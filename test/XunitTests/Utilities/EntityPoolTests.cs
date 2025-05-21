@@ -8,7 +8,6 @@ namespace XunitTests.Utilities;
 [Category("coverage")]
 public sealed class EntityPoolTests
 {
-
     [Fact]
     public void Get_ShouldReturnNewEntity_WhenPoolIsEmpty()
     {
@@ -46,6 +45,26 @@ public sealed class EntityPoolTests
         // Assert
         Assert.Equal(entity, retrieved);
         Assert.Equal(entity.Id, retrieved.Id);
+    }
+
+    [Fact]
+    public void Get_ReducesCountByOne()
+    {
+        // Arrange
+        var entityUniqueIdProvider = new EntityUniqueIdProvider();
+
+        var pool = new EntityPool(
+            () => CreateEntity(entityUniqueIdProvider));
+
+        var entity = CreateEntity(entityUniqueIdProvider);
+
+        pool.Return(entity);
+
+        // Act
+        pool.Get();
+
+        // Assert
+        Assert.Equal(0, pool.Count);
     }
 
     [Fact]
@@ -87,7 +106,7 @@ public sealed class EntityPoolTests
     }
 
     [Fact]
-    public void Get_ShouldNotReturnSameInstance_IfNotReturned()
+    public void Return_SameEntityTwice_ThrowsInvalidOperationException()
     {
         // Arrange
         var entityUniqueIdProvider = new EntityUniqueIdProvider();
@@ -97,22 +116,35 @@ public sealed class EntityPoolTests
 
         var entity = CreateEntity(entityUniqueIdProvider);
 
-        var entity1 = pool.Get();
+        pool.Return(entity);
 
         // Act
-        var entity2 = pool.Get();
+        var act = () => pool.Return(entity);
 
         // Assert
-        Assert.NotEqual(entity1, entity2);
-        Assert.NotEqual(entity1.Id, entity2.Id);
+        Assert.Throws<InvalidOperationException>(act);
     }
 
-    private Entity CreateEntity(
-        EntityUniqueIdProvider entityUniqueIdProvider)
+    [Fact]
+    public void Count_AfterReturningEntities_ReflectsCorrectNumber()
     {
-        var id = entityUniqueIdProvider.GetNextId();
+        // Arrange
+        var entityUniqueIdProvider = new EntityUniqueIdProvider();
 
-        return new Entity(id);
+        var pool = new EntityPool(
+            () => CreateEntity(entityUniqueIdProvider));
+
+        var entity1 = CreateEntity(entityUniqueIdProvider);
+        var entity2 = CreateEntity(entityUniqueIdProvider);
+
+        pool.Return(entity1);
+        pool.Return(entity2);
+
+        // Act
+        var count = pool.Count;
+
+        // Assert
+        Assert.Equal(2, count);
     }
 
     [Fact(Skip = "non-deterministic result")]
@@ -195,5 +227,13 @@ public sealed class EntityPoolTests
             Assert.Equal(returnedEntity, entity);
             Assert.Equal(returnedEntity.Id, entity.Id);
         }
+    }
+
+    private Entity CreateEntity(
+        EntityUniqueIdProvider entityUniqueIdProvider)
+    {
+        var id = entityUniqueIdProvider.GetNextId();
+
+        return new Entity(id);
     }
 }

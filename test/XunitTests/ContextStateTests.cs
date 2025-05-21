@@ -12,6 +12,7 @@ public sealed class ContextStateTests
     {
         // Arrange
         var state = new ContextState();
+
         var key = "myKey";
         var value = 123;
 
@@ -28,8 +29,10 @@ public sealed class ContextStateTests
     {
         // Arrange
         var state = new ContextState();
+
         var key = "myKey";
         var value = "hello";
+
         state.Set(key, value);
 
         // Act
@@ -44,6 +47,7 @@ public sealed class ContextStateTests
     {
         // Arrange
         var state = new ContextState();
+
         var key = "nonexistent";
 
         // Act & Assert
@@ -55,7 +59,9 @@ public sealed class ContextStateTests
     {
         // Arrange
         var state = new ContextState();
+
         var key = "myKey";
+
         state.Set(key, 123);
 
         // Act & Assert
@@ -67,8 +73,10 @@ public sealed class ContextStateTests
     {
         // Arrange
         var state = new ContextState();
+
         var key = "myKey";
         var value = 42.5;
+
         state.Set(key, value);
 
         // Act
@@ -84,6 +92,7 @@ public sealed class ContextStateTests
     {
         // Arrange
         var state = new ContextState();
+
         var key = "missing";
 
         // Act
@@ -100,10 +109,17 @@ public sealed class ContextStateTests
         // Arrange
         var state = new ContextState();
         var key = "myKey";
+
         state.Set(key, true);
 
-        // Act & Assert
-        Assert.Throws<InvalidCastException>(() => state.TryGet<int>(key, out _));
+        // Act
+        var act = () =>
+        {
+            state.TryGet<int>(key, out _);
+        };
+
+        // Assert
+        Assert.Throws<InvalidCastException>(act);
     }
 
     [Fact]
@@ -111,7 +127,9 @@ public sealed class ContextStateTests
     {
         // Arrange
         var state = new ContextState();
+
         var key = "toRemove";
+
         state.Set(key, "value");
 
         // Act
@@ -126,6 +144,7 @@ public sealed class ContextStateTests
     {
         // Arrange
         var state = new ContextState();
+
         state.Set("key1", 1);
         state.Set("key2", 2);
 
@@ -142,6 +161,7 @@ public sealed class ContextStateTests
     {
         // Arrange
         var state = new ContextState();
+
         state.Set("existing", 10);
 
         // Act

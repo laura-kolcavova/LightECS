@@ -8,6 +8,8 @@ internal sealed class ComponentStoreProvider
 
     private readonly int _initialComponentStoreCapacity;
 
+    private readonly object _lock = new();
+
     public ComponentStoreProvider(
         int initialComponentStoreCapacity)
     {
@@ -21,19 +23,22 @@ internal sealed class ComponentStoreProvider
     {
         var componentType = typeof(TComponent);
 
-        if (_componentStoresByType.TryGetValue(
-            componentType,
-            out var componentStoreBase))
+        lock (_lock)
         {
-            return (ComponentStore<TComponent>)componentStoreBase;
+            if (_componentStoresByType.TryGetValue(
+                componentType,
+                out var componentStoreBase))
+            {
+                return (ComponentStore<TComponent>)componentStoreBase;
+            }
+
+            var componentStore = new ComponentStore<TComponent>(
+                _initialComponentStoreCapacity);
+
+            _componentStoresByType[componentType] = componentStore;
+
+            return componentStore;
         }
-
-        var componentStore = new ComponentStore<TComponent>(
-            _initialComponentStoreCapacity);
-
-        _componentStoresByType[componentType] = componentStore;
-
-        return componentStore;
     }
 
     public IComponentStore<TComponent> GetStore<TComponent>()

@@ -12,6 +12,8 @@ public class EntityStore :
 
     public event EntityRemovedEventHandler? EntityRemoved;
 
+    private readonly object _lock = new();
+
     public EntityStore()
     {
         _entities = [];
@@ -29,13 +31,16 @@ public class EntityStore :
     public void Add(
         Entity entity)
     {
-        if (!_entities.Add(entity))
+        lock (_lock)
         {
-            throw new InvalidOperationException(
-                $"Entity {entity.Id} is already present in the store.");
-        }
+            if (!_entities.Add(entity))
+            {
+                throw new InvalidOperationException(
+                    $"Entity {entity.Id} is already present in the store.");
+            }
 
-        EntityAdded?.Invoke(entity);
+            EntityAdded?.Invoke(entity);
+        }
     }
 
     public bool Contains(
@@ -47,19 +52,32 @@ public class EntityStore :
     public bool Remove(
         Entity entity)
     {
-        if (!_entities.Remove(entity))
+        lock (_lock)
         {
-            return false;
+            if (!_entities.Remove(entity))
+            {
+                return false;
+            }
+
+            EntityRemoved?.Invoke(entity);
+
+            return true;
         }
-
-        EntityRemoved?.Invoke(entity);
-
-        return true;
     }
 
     public void Clear()
     {
-        _entities.Clear();
+        lock (_lock)
+        {
+            var oldEntities = _entities.ToList();
+
+            _entities.Clear();
+
+            foreach (var entity in oldEntities)
+            {
+                EntityRemoved?.Invoke(entity);
+            }
+        }
     }
 
     public IEnumerable<Entity> AsEnumerable()

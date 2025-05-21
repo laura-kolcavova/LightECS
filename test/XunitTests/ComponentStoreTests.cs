@@ -63,10 +63,14 @@ public sealed class ComponentStoreTests
     {
         // Arrange
         var store = new ComponentStore<TestComponent>();
+
         var entity = new Entity(1);
 
-        // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => store.Get(entity));
+        // Act
+        var act = () => store.Get(entity);
+
+        // Assert
+        Assert.Throws<InvalidOperationException>(act);
     }
 
     [Fact]

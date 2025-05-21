@@ -38,6 +38,7 @@ public sealed class EntityUniqueIdProviderTests
     {
         // Arrange
         var provider = new EntityUniqueIdProvider();
+
         provider.GetNextId(); // 1
         provider.GetNextId(); // 2
 
@@ -54,6 +55,7 @@ public sealed class EntityUniqueIdProviderTests
     {
         // Arrange
         var provider = new EntityUniqueIdProvider();
+
         var tasks = Enumerable.Range(0, 1000).Select(_ => Task.Run(() =>
         {
             provider.GetNextId();

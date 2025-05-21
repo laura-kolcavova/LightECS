@@ -16,6 +16,8 @@ public class ComponentStore<TComponent> :
 
     public event ComponentRemovedEventHandler<TComponent>? ComponentRemoved;
 
+    private readonly object _lock = new();
+
     public ComponentStore()
     {
         _componentsByEntities = [];
@@ -34,25 +36,28 @@ public class ComponentStore<TComponent> :
         Entity entity,
         TComponent component)
     {
-        if (_componentsByEntities.TryGetValue(
-            entity.Id,
-            out var existingComponent))
+        lock (_lock)
         {
-            _componentsByEntities[entity.Id] = component;
+            if (_componentsByEntities.TryGetValue(
+                entity.Id,
+                out var existingComponent))
+            {
+                _componentsByEntities[entity.Id] = component;
 
-            ComponentUpdated?.Invoke(
-                entity,
-                existingComponent,
+                ComponentUpdated?.Invoke(
+                    entity,
+                    existingComponent,
+                    component);
+
+                return;
+            }
+
+            _componentsByEntities.Add(
+                entity.Id,
                 component);
 
-            return;
+            ComponentAdded?.Invoke(entity, component);
         }
-
-        _componentsByEntities.Add(
-            entity.Id,
-            component);
-
-        ComponentAdded?.Invoke(entity, component);
     }
 
     public TComponent Get(
@@ -88,16 +93,19 @@ public class ComponentStore<TComponent> :
     public bool Remove(
         Entity entity)
     {
-        if (!_componentsByEntities.Remove(
-            entity.Id,
-            out var component))
+        lock (_lock)
         {
-            return false;
+            if (!_componentsByEntities.Remove(
+                entity.Id,
+                out var component))
+            {
+                return false;
+            }
+
+            ComponentRemoved?.Invoke(entity, component);
+
+            return true;
         }
-
-        ComponentRemoved?.Invoke(entity, component);
-
-        return true;
     }
 
     public void Clear()
