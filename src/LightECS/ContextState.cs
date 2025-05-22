@@ -70,15 +70,13 @@ public class ContextState :
         return true;
     }
 
-    public TValue Set<TValue>(
+    public void Set<TValue>(
         string key,
         TValue value)
     {
         lock (_lock)
         {
             _state[key] = value;
-
-            return value;
         }
     }
 

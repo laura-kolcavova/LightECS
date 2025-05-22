@@ -6,7 +6,7 @@ namespace XunitTests.Utilities;
 
 [Category("unit")]
 [Category("coverage")]
-public sealed class ComponentStoreProviderTests
+public sealed class ComponentStoreRegistryTests
 {
     public class TestComponentA : IComponent
     {
@@ -19,13 +19,13 @@ public sealed class ComponentStoreProviderTests
     }
 
     [Fact]
-    public void GetOrCreateStore_ShouldCreateNewStore_WhenNotExists()
+    public void GetOrCreate_ShouldCreateNewStore_WhenNotExists()
     {
         // Arrange
-        var provider = new ComponentStoreProvider(initialComponentStoreCapacity: 10);
+        var sut = new ComponentStoreRegistry(initialComponentStoreCapacity: 10);
 
         // Act
-        var store = provider.GetOrCreateStore<TestComponentA>();
+        var store = sut.GetOrCreate<TestComponentA>();
 
         // Assert
         Assert.NotNull(store);
@@ -36,11 +36,11 @@ public sealed class ComponentStoreProviderTests
     public void GetStore_ShouldReturnStore_WhenExists()
     {
         // Arrange
-        var provider = new ComponentStoreProvider(10);
-        var expectedStore = provider.GetOrCreateStore<TestComponentA>();
+        var sut = new ComponentStoreRegistry(10);
+        var expectedStore = sut.GetOrCreate<TestComponentA>();
 
         // Act
-        var retrievedStore = provider.GetStore<TestComponentA>();
+        var retrievedStore = sut.Get<TestComponentA>();
 
         // Assert
         Assert.Same(expectedStore, retrievedStore);
@@ -50,10 +50,10 @@ public sealed class ComponentStoreProviderTests
     public void GetStore_ShouldThrow_WhenStoreNotExists()
     {
         // Arrange
-        var provider = new ComponentStoreProvider(10);
+        var provider = new ComponentStoreRegistry(10);
 
         // Act
-        var act = () => provider.GetStore<TestComponentA>();
+        var act = () => provider.Get<TestComponentA>();
 
         // Assert
         Assert.Throws<InvalidOperationException>(act);
@@ -63,12 +63,12 @@ public sealed class ComponentStoreProviderTests
     public void GetAllStores_ShouldReturnAllCreatedStores()
     {
         // Arrange
-        var provider = new ComponentStoreProvider(10);
-        var storeA = provider.GetOrCreateStore<TestComponentA>();
-        var storeB = provider.GetOrCreateStore<TestComponentB>();
+        var provider = new ComponentStoreRegistry(10);
+        var storeA = provider.GetOrCreate<TestComponentA>();
+        var storeB = provider.GetOrCreate<TestComponentB>();
 
         // Act
-        var allStores = provider.GetAllStores().ToList();
+        var allStores = provider.GetAll().ToList();
 
         // Assert
         Assert.Equal(2, allStores.Count);

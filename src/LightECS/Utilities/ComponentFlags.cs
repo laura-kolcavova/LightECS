@@ -1,6 +1,7 @@
 ﻿namespace LightECS.Utilities;
 
-internal readonly struct ComponentFlags
+internal readonly struct ComponentFlags :
+    IEquatable<ComponentFlags>
 {
     public ulong Bits { get; }
 
@@ -15,17 +16,25 @@ internal readonly struct ComponentFlags
         Bits = bits;
     }
 
+    public bool HasNoFlags => Bits == 0;
+
     public bool this[byte index]
     {
         get
         {
-            var mask = CreateMaskFromIndex(index);
-
-            return (Bits & mask) == mask;
+            return HasFlagAtIndex(index);
         }
     }
 
-    public ComponentFlags SetTrueBitAtIndex(
+    public bool HasFlagAtIndex(
+        byte index)
+    {
+        var mask = CreateMaskFromIndex(index);
+
+        return (Bits & mask) == mask;
+    }
+
+    public ComponentFlags SetFlagAtIndex(
         byte index)
     {
         var mask = CreateMaskFromIndex(index);
@@ -35,7 +44,7 @@ internal readonly struct ComponentFlags
         return new ComponentFlags(newBits);
     }
 
-    public ComponentFlags SetFalseBitAtIndex(
+    public ComponentFlags UnsetFlagAtIndex(
         byte index)
     {
         var mask = CreateMaskFromIndex(index);
@@ -61,4 +70,56 @@ internal readonly struct ComponentFlags
                 $"Index {index} must be between 0 and 63 (inclusive).");
         }
     }
+
+    public bool Equals(ComponentFlags other)
+    {
+        return other.Bits == Bits;
+    }
+
+    public override bool Equals(object? obj)
+       => obj is ComponentFlags other && Equals(other);
+
+    public override int GetHashCode()
+       => Bits.GetHashCode();
+
+    public static ComponentFlags operator |(
+        ComponentFlags left,
+        ComponentFlags right)
+        => new(
+            left.Bits | right.Bits);
+
+    public static ComponentFlags operator &(
+        ComponentFlags left,
+        ComponentFlags right)
+        => new(
+            left.Bits & right.Bits);
+
+    public static ComponentFlags operator ^(
+        ComponentFlags left,
+        ComponentFlags right)
+        => new(
+            left.Bits ^ right.Bits);
+
+    public static ComponentFlags operator ~(
+        ComponentFlags flags)
+        => new(
+            ~flags.Bits);
+
+    public static bool operator ==(
+        ComponentFlags left,
+        ComponentFlags right)
+        => left.Bits == right.Bits;
+
+    public static bool operator !=(
+        ComponentFlags left,
+        ComponentFlags right)
+        => left.Bits != right.Bits;
+
+    public static implicit operator ComponentFlags(
+        ulong bits)
+        => new(bits);
+
+    public static implicit operator ulong(
+        ComponentFlags flags)
+        => flags.Bits;
 }

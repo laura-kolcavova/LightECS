@@ -11,7 +11,7 @@ public interface IContextState
         string key,
         [MaybeNullWhen(false)] out TValue value);
 
-    public TValue Set<TValue>(
+    public void Set<TValue>(
         string key,
         TValue value);
 

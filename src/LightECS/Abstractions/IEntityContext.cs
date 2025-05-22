@@ -44,7 +44,7 @@ public interface IEntityContext
         Entity entity)
         where TComponent : IComponent;
 
-    public void Remove<TComponent>(
+    public void Unset<TComponent>(
         Entity entity)
         where TComponent : IComponent;
 }

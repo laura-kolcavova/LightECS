@@ -1,6 +1,9 @@
-﻿namespace LightECS.Utilities;
+﻿using LightECS.Utilities.Abstractions;
 
-internal sealed class EntityPool
+namespace LightECS.Utilities;
+
+internal sealed class EntityPool :
+    IEntityPool
 {
     private readonly Func<Entity> _factory;
 
@@ -55,7 +58,8 @@ internal sealed class EntityPool
         }
     }
 
-    public bool Contains(Entity value)
+    public bool Contains(
+        Entity value)
     {
         return _stack.Contains(value);
     }

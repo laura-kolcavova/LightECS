@@ -12,12 +12,12 @@ public sealed class EntityPoolTests
     public void Get_ShouldReturnNewEntity_WhenPoolIsEmpty()
     {
         // Arrange
-        var entityUniqueIdProvider = new EntityUniqueIdProvider();
+        var entityUniqueIdProvider = new LightECS.Utilities.SequentialEntityIdGenerator();
 
         var pool = new EntityPool(
             () => CreateEntity(entityUniqueIdProvider));
 
-        var expectedId = entityUniqueIdProvider.GetCurrentId() + 1;
+        var expectedId = entityUniqueIdProvider.GetLastId() + 1;
 
         // Act
         var entity = pool.Get();
@@ -30,7 +30,7 @@ public sealed class EntityPoolTests
     public void Get_ShouldReturnReturnedEntity()
     {
         // Arrange
-        var entityUniqueIdProvider = new EntityUniqueIdProvider();
+        var entityUniqueIdProvider = new LightECS.Utilities.SequentialEntityIdGenerator();
 
         var pool = new EntityPool(
             () => CreateEntity(entityUniqueIdProvider));
@@ -51,7 +51,7 @@ public sealed class EntityPoolTests
     public void Get_ReducesCountByOne()
     {
         // Arrange
-        var entityUniqueIdProvider = new EntityUniqueIdProvider();
+        var entityUniqueIdProvider = new LightECS.Utilities.SequentialEntityIdGenerator();
 
         var pool = new EntityPool(
             () => CreateEntity(entityUniqueIdProvider));
@@ -71,7 +71,7 @@ public sealed class EntityPoolTests
     public void Contains_ShouldReturnTrue_ForReturnedEntity()
     {
         // Arrange
-        var entityUniqueIdProvider = new EntityUniqueIdProvider();
+        var entityUniqueIdProvider = new LightECS.Utilities.SequentialEntityIdGenerator();
 
         var pool = new EntityPool(
             () => CreateEntity(entityUniqueIdProvider));
@@ -91,7 +91,7 @@ public sealed class EntityPoolTests
     public void Contains_ShouldReturnFalse_ForNonReturnedEntity()
     {
         // Arrange
-        var entityUniqueIdProvider = new EntityUniqueIdProvider();
+        var entityUniqueIdProvider = new LightECS.Utilities.SequentialEntityIdGenerator();
 
         var pool = new EntityPool(
             () => CreateEntity(entityUniqueIdProvider));
@@ -109,7 +109,7 @@ public sealed class EntityPoolTests
     public void Return_SameEntityTwice_ThrowsInvalidOperationException()
     {
         // Arrange
-        var entityUniqueIdProvider = new EntityUniqueIdProvider();
+        var entityUniqueIdProvider = new LightECS.Utilities.SequentialEntityIdGenerator();
 
         var pool = new EntityPool(
             () => CreateEntity(entityUniqueIdProvider));
@@ -129,7 +129,7 @@ public sealed class EntityPoolTests
     public void Count_AfterReturningEntities_ReflectsCorrectNumber()
     {
         // Arrange
-        var entityUniqueIdProvider = new EntityUniqueIdProvider();
+        var entityUniqueIdProvider = new LightECS.Utilities.SequentialEntityIdGenerator();
 
         var pool = new EntityPool(
             () => CreateEntity(entityUniqueIdProvider));
@@ -152,7 +152,7 @@ public sealed class EntityPoolTests
     public async Task Return_ShouldBeThreadSafe()
     {
         // Arrange
-        var entityUniqueIdProvider = new EntityUniqueIdProvider();
+        var entityUniqueIdProvider = new LightECS.Utilities.SequentialEntityIdGenerator();
 
         var pool = new EntityPool(
             () => CreateEntity(entityUniqueIdProvider));
@@ -184,7 +184,7 @@ public sealed class EntityPoolTests
     public async Task Get_ShouldBeThreadSafe()
     {
         // Arrange
-        var entityUniqueIdProvider = new EntityUniqueIdProvider();
+        var entityUniqueIdProvider = new LightECS.Utilities.SequentialEntityIdGenerator();
 
         var pool = new EntityPool(
             () => CreateEntity(entityUniqueIdProvider));
@@ -230,9 +230,9 @@ public sealed class EntityPoolTests
     }
 
     private Entity CreateEntity(
-        EntityUniqueIdProvider entityUniqueIdProvider)
+        SequentialEntityIdGenerator entityUniqueIdProvider)
     {
-        var id = entityUniqueIdProvider.GetNextId();
+        var id = entityUniqueIdProvider.NextId();
 
         return new Entity(id);
     }

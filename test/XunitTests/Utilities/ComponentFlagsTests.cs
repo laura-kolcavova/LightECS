@@ -32,16 +32,64 @@ public sealed class ComponentFlagsTests
 
     [Theory]
     [InlineData(0)]
+    [InlineData(5)]
+    [InlineData(63)]
+    public void HasFlagAtIndex_ShouldReturnTrue_WhenFlagIsSet(byte index)
+    {
+        // Arrange
+        var bits = 1ul << index;
+        var flags = new ComponentFlags(bits);
+
+        // Act
+        var isSet = flags.HasFlagAtIndex(index);
+
+        // Assert
+        Assert.True(isSet);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(5)]
+    [InlineData(63)]
+    public void HasFlagAtIndex_ShouldReturnFalse_WhenFlagIsNotSet(byte index)
+    {
+        // Arrange
+        var flags = new ComponentFlags(0);
+
+        // Act
+        var isSet = flags.HasFlagAtIndex(index);
+
+        // Assert
+        Assert.False(isSet);
+    }
+
+    [Theory]
+    [InlineData(64)]
+    [InlineData(100)]
+    public void HasFlagAtIndex_ShouldThrow_WhenIndexOutOfRange(byte invalidIndex)
+    {
+        // Arrange
+        var flags = new ComponentFlags();
+
+        // Act
+        var act = () => { var _ = flags.HasFlagAtIndex(invalidIndex); };
+
+        // Assert
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(act);
+    }
+
+    [Theory]
+    [InlineData(0)]
     [InlineData(1)]
     [InlineData(63)]
-    public void SetTrueBitAtIndex_ShouldSetBitCorrectly(
+    public void SetFlagAtIndex_ShouldSetBitCorrectly(
         byte index)
     {
         // Arrange
         var flags = new ComponentFlags();
 
         // Act
-        var updatedFlags = flags.SetTrueBitAtIndex(index);
+        var updatedFlags = flags.SetFlagAtIndex(index);
 
         // Assert
         var expectedBits = 1ul << index;
@@ -49,10 +97,25 @@ public sealed class ComponentFlagsTests
     }
 
     [Theory]
+    [InlineData(64)]
+    [InlineData(100)]
+    public void SetFlagAtIndex_ShouldThrow_WhenIndexOutOfRange(byte invalidIndex)
+    {
+        // Arrange
+        var flags = new ComponentFlags();
+
+        // Act
+        var act = () => { flags.SetFlagAtIndex(invalidIndex); };
+
+        // Assert
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(act);
+    }
+
+    [Theory]
     [InlineData(0)]
     [InlineData(1)]
     [InlineData(63)]
-    public void SetFalseBitAtIndex_ShouldUnsetBitCorrectly(
+    public void UnsetFlagAtIndex_ShouldUnsetBitCorrectly(
         byte index)
     {
         // Arrange
@@ -61,7 +124,7 @@ public sealed class ComponentFlagsTests
         var flags = new ComponentFlags(initialBits);
 
         // Act
-        var updatedFlags = flags.SetFalseBitAtIndex(index);
+        var updatedFlags = flags.UnsetFlagAtIndex(index);
 
         // Assert
         var expectedBits = initialBits & ~(1ul << index);
@@ -69,10 +132,25 @@ public sealed class ComponentFlagsTests
     }
 
     [Theory]
+    [InlineData(64)]
+    [InlineData(100)]
+    public void UnsetFlagAtIndex_ShouldThrow_WhenIndexOutOfRange(byte invalidIndex)
+    {
+        // Arrange
+        var flags = new ComponentFlags(ulong.MaxValue);
+
+        // Act
+        var act = () => { flags.UnsetFlagAtIndex(invalidIndex); };
+
+        // Assert
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(act);
+    }
+
+    [Theory]
     [InlineData(0)]
     [InlineData(5)]
     [InlineData(63)]
-    public void Indexer_ShouldReturnTrue_WhenBitIsSet(byte index)
+    public void Indexer_ShouldReturnTrue_WhenFlagIsSet(byte index)
     {
         // Arrange
         var bits = 1ul << index;
@@ -89,7 +167,7 @@ public sealed class ComponentFlagsTests
     [InlineData(0)]
     [InlineData(5)]
     [InlineData(63)]
-    public void Indexer_ShouldReturnFalse_WhenBitIsNotSet(byte index)
+    public void Indexer_ShouldReturnFalse_WhenFlagIsNotSet(byte index)
     {
         // Arrange
         var flags = new ComponentFlags(0);
@@ -99,36 +177,6 @@ public sealed class ComponentFlagsTests
 
         // Assert
         Assert.False(isSet);
-    }
-
-    [Theory]
-    [InlineData(64)]
-    [InlineData(100)]
-    public void SetTrueBitAtIndex_ShouldThrow_WhenIndexOutOfRange(byte invalidIndex)
-    {
-        // Arrange
-        var flags = new ComponentFlags();
-
-        // Act
-        var act = () => { flags.SetTrueBitAtIndex(invalidIndex); };
-
-        // Assert
-        var ex = Assert.Throws<ArgumentOutOfRangeException>(act);
-    }
-
-    [Theory]
-    [InlineData(64)]
-    [InlineData(100)]
-    public void SetFalseBitAtIndex_ShouldThrow_WhenIndexOutOfRange(byte invalidIndex)
-    {
-        // Arrange
-        var flags = new ComponentFlags(ulong.MaxValue);
-
-        // Act
-        var act = () => { flags.SetFalseBitAtIndex(invalidIndex); };
-
-        // Assert
-        var ex = Assert.Throws<ArgumentOutOfRangeException>(act);
     }
 
     [Theory]

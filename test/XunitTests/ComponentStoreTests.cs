@@ -135,7 +135,7 @@ public sealed class ComponentStoreTests
     }
 
     [Fact]
-    public void Remove_ShouldReturnTrue_WhenComponentExists()
+    public void Remove_ShouldRemoveComponent_WhenComponentExists()
     {
         // Arrange
         var store = new ComponentStore<TestComponent>();
@@ -143,25 +143,10 @@ public sealed class ComponentStoreTests
         store.Set(entity, new TestComponent());
 
         // Act
-        var removed = store.Remove(entity);
+        store.Unset(entity);
 
         // Assert
-        Assert.True(removed);
         Assert.False(store.Has(entity));
-    }
-
-    [Fact]
-    public void Remove_ShouldReturnFalse_WhenComponentDoesNotExist()
-    {
-        // Arrange
-        var store = new ComponentStore<TestComponent>();
-        var entity = new Entity(404);
-
-        // Act
-        var result = store.Remove(entity);
-
-        // Assert
-        Assert.False(result);
     }
 
     [Fact]

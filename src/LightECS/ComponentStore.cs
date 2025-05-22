@@ -90,21 +90,17 @@ public class ComponentStore<TComponent> :
             entity.Id);
     }
 
-    public bool Remove(
+    public void Unset(
         Entity entity)
     {
         lock (_lock)
         {
-            if (!_componentsByEntities.Remove(
+            if (_componentsByEntities.Remove(
                 entity.Id,
                 out var component))
             {
-                return false;
+                ComponentRemoved?.Invoke(entity, component);
             }
-
-            ComponentRemoved?.Invoke(entity, component);
-
-            return true;
         }
     }
 

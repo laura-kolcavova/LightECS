@@ -1,8 +1,10 @@
 ﻿using LightECS.Abstractions;
+using LightECS.Utilities.Abstractions;
 
 namespace LightECS.Utilities;
 
-internal sealed class ComponentStoreProvider
+internal sealed class ComponentStoreRegistry :
+    IComponentStoreRegistry
 {
     private readonly Dictionary<Type, IComponentStoreBase> _componentStoresByType;
 
@@ -10,7 +12,7 @@ internal sealed class ComponentStoreProvider
 
     private readonly object _lock = new();
 
-    public ComponentStoreProvider(
+    public ComponentStoreRegistry(
         int initialComponentStoreCapacity)
     {
         _initialComponentStoreCapacity = initialComponentStoreCapacity;
@@ -18,8 +20,24 @@ internal sealed class ComponentStoreProvider
         _componentStoresByType = [];
     }
 
-    public IComponentStore<TComponent> GetOrCreateStore<TComponent>()
-       where TComponent : IComponent
+    public IComponentStore<TComponent> Get<TComponent>()
+        where TComponent : IComponent
+    {
+        var componentType = typeof(TComponent);
+
+        if (!_componentStoresByType.TryGetValue(
+            componentType,
+            out var componentStoreBase))
+        {
+            throw new InvalidOperationException(
+                $"Component store for {typeof(TComponent)} does not exist.");
+        }
+
+        return (ComponentStore<TComponent>)componentStoreBase;
+    }
+
+    public IComponentStore<TComponent> GetOrCreate<TComponent>()
+        where TComponent : IComponent
     {
         var componentType = typeof(TComponent);
 
@@ -41,23 +59,7 @@ internal sealed class ComponentStoreProvider
         }
     }
 
-    public IComponentStore<TComponent> GetStore<TComponent>()
-        where TComponent : IComponent
-    {
-        var componentType = typeof(TComponent);
-
-        if (_componentStoresByType.TryGetValue(
-            componentType,
-            out var componentStoreBase))
-        {
-            return (ComponentStore<TComponent>)componentStoreBase;
-        }
-
-        throw new InvalidOperationException(
-            $"Component store for {typeof(TComponent)} does not exist.");
-    }
-
-    public IReadOnlyCollection<IComponentStoreBase> GetAllStores()
+    public IReadOnlyCollection<IComponentStoreBase> GetAll()
     {
         return _componentStoresByType
             .Values;

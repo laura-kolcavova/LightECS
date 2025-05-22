@@ -15,11 +15,13 @@ public class EntityContext :
 
     private readonly EntityStore _entityStore;
 
+    private readonly SequentialEntityIdGenerator _sequentialEntityIdGenerator;
+
     private readonly EntityPool _entityPool;
 
-    private readonly EntityUniqueIdProvider _entityUniqueIdProvider;
+    private readonly EntityMetadataStore _entityMetadataStore;
 
-    private readonly ComponentStoreProvider _componentStoreProvider;
+    private readonly ComponentStoreRegistry _componentStoreRegistry;
 
     private readonly ContextState _contextState;
 
@@ -30,13 +32,15 @@ public class EntityContext :
         _entityStore = new EntityStore(
             InitialEntityStoreCapacity);
 
+        _sequentialEntityIdGenerator = new SequentialEntityIdGenerator();
+
         _entityPool = new EntityPool(
             CreateNewEntity,
             InitialEntityPoolCapacity);
 
-        _entityUniqueIdProvider = new EntityUniqueIdProvider();
+        _entityMetadataStore = new EntityMetadataStore();
 
-        _componentStoreProvider = new ComponentStoreProvider(
+        _componentStoreRegistry = new ComponentStoreRegistry(
             InitialComponentStoreCapacity);
 
         _contextState = new ContextState();
@@ -65,14 +69,16 @@ public class EntityContext :
     public void DestroyEntity(
         Entity entity)
     {
-        foreach (var componentStoreBase in _componentStoreProvider.GetAllStores())
+        foreach (var componentStoreBase in _componentStoreRegistry.GetAll())
         {
-            componentStoreBase.Remove(entity);
+            componentStoreBase.Unset(entity);
         }
 
         _entityStore.Remove(entity);
 
         _entityPool.Return(entity);
+
+        _entityMetadataStore.Unset(entity);
     }
 
     public bool EntityExists(
@@ -84,8 +90,8 @@ public class EntityContext :
     public IComponentStore<TComponent> UseStore<TComponent>()
        where TComponent : IComponent
     {
-        return _componentStoreProvider
-            .GetOrCreateStore<TComponent>();
+        return _componentStoreRegistry
+            .GetOrCreate<TComponent>();
     }
 
     public void Set<TComponent>(
@@ -93,8 +99,8 @@ public class EntityContext :
        TComponent component)
        where TComponent : IComponent
     {
-        var componentStore = _componentStoreProvider
-            .GetOrCreateStore<TComponent>();
+        var componentStore = _componentStoreRegistry
+            .GetOrCreate<TComponent>();
 
         componentStore.Set(
             entity,
@@ -105,8 +111,8 @@ public class EntityContext :
         Entity entity)
         where TComponent : IComponent
     {
-        var componentStore = _componentStoreProvider
-            .GetStore<TComponent>();
+        var componentStore = _componentStoreRegistry
+            .Get<TComponent>();
 
         return componentStore.Get(entity);
     }
@@ -116,8 +122,8 @@ public class EntityContext :
         out TComponent? component)
         where TComponent : IComponent
     {
-        var componentStore = _componentStoreProvider
-            .GetStore<TComponent>();
+        var componentStore = _componentStoreRegistry
+            .Get<TComponent>();
 
         return componentStore.TryGet(
             entity,
@@ -127,8 +133,8 @@ public class EntityContext :
     public int Count<TComponent>()
         where TComponent : IComponent
     {
-        var componentStore = _componentStoreProvider
-            .GetStore<TComponent>();
+        var componentStore = _componentStoreRegistry
+            .Get<TComponent>();
 
         return componentStore.Count;
     }
@@ -137,25 +143,25 @@ public class EntityContext :
         Entity entity)
         where TComponent : IComponent
     {
-        var componentStore = _componentStoreProvider
-            .GetStore<TComponent>();
+        var componentStore = _componentStoreRegistry
+            .Get<TComponent>();
 
         return componentStore.Has(entity);
     }
 
-    public void Remove<TComponent>(
+    public void Unset<TComponent>(
         Entity entity)
         where TComponent : IComponent
     {
-        var componentStore = _componentStoreProvider
-            .GetStore<TComponent>();
+        var componentStore = _componentStoreRegistry
+            .Get<TComponent>();
 
-        componentStore.Remove(entity);
+        componentStore.Unset(entity);
     }
 
     private Entity CreateNewEntity()
     {
-        var entityId = _entityUniqueIdProvider.GetNextId();
+        var entityId = _sequentialEntityIdGenerator.NextId();
 
         var entity = new Entity(entityId);
 

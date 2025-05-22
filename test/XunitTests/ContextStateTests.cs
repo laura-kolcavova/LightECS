@@ -17,10 +17,9 @@ public sealed class ContextStateTests
         var value = 123;
 
         // Act
-        var result = state.Set(key, value);
+        state.Set(key, value);
 
         // Assert
-        Assert.Equal(value, result);
         Assert.True(state.Contains(key));
     }
 
