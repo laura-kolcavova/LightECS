@@ -23,7 +23,7 @@ public class ContextState :
         }
     }
 
-    public bool Contains(
+    public bool Has(
         string key)
     {
         return _state.ContainsKey(key);

@@ -18,7 +18,7 @@ public interface IContextState
     public void Unset(
         string key);
 
-    public bool Contains(
+    public bool Has(
         string key);
 
     public void Clear();

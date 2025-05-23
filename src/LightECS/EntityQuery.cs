@@ -41,7 +41,7 @@ public class EntityQuery :
     public IEntityQuery With<TComponent>()
         where TComponent : IComponent
     {
-        var flagIndex = _componentFlagIndexRegistry.GetOrRegister<TComponent>();
+        var flagIndex = _componentFlagIndexRegistry.GetOrCreate<TComponent>();
 
         var newComponentFlags = _componentFlags.SetFlagAtIndex(
             flagIndex);

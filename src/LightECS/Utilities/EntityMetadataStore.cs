@@ -11,7 +11,7 @@ internal sealed class EntityMetadataStore
 
     public EntityMetadataStore()
     {
-        _entityMetadataByEntities = new Dictionary<uint, EntityMetadata>();
+        _entityMetadataByEntities = [];
     }
 
     public EntityMetadata Get(
@@ -30,11 +30,22 @@ internal sealed class EntityMetadataStore
 
     public void Set(
         Entity entity,
-        EntityMetadata entityMetadata)
+        EntityMetadata newEntityMetadata,
+        Func<EntityMetadata, EntityMetadata> updateEntityMetadataFactory)
     {
         lock (_lock)
         {
-            _entityMetadataByEntities[entity.Id] = entityMetadata;
+            if (_entityMetadataByEntities.TryGetValue(
+                entity.Id,
+                out var existingEntityMetadata))
+            {
+                var updatedEntityMetadata = updateEntityMetadataFactory(
+                    existingEntityMetadata);
+
+                _entityMetadataByEntities[entity.Id] = updatedEntityMetadata;
+            }
+
+            _entityMetadataByEntities.Add(entity.Id, newEntityMetadata);
         }
     }
 

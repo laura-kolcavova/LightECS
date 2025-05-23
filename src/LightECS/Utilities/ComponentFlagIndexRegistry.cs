@@ -33,7 +33,7 @@ internal sealed class ComponentFlagIndexRegistry :
         return flagIndex;
     }
 
-    public byte GetOrRegister<TComponent>()
+    public byte GetOrCreate<TComponent>()
         where TComponent : IComponent
     {
         var componentType = typeof(TComponent);
@@ -57,7 +57,7 @@ internal sealed class ComponentFlagIndexRegistry :
         }
     }
 
-    public byte Register<TComponent>()
+    public byte Create<TComponent>()
         where TComponent : IComponent
     {
         var componentType = typeof(TComponent);

@@ -7,9 +7,9 @@ internal interface IComponentFlagIndexRegistry
     public byte Get<TComponent>()
        where TComponent : IComponent;
 
-    public byte GetOrRegister<TComponent>()
+    public byte GetOrCreate<TComponent>()
         where TComponent : IComponent;
 
-    public byte Register<TComponent>()
+    public byte Create<TComponent>()
         where TComponent : IComponent;
 }

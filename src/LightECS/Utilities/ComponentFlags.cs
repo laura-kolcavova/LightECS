@@ -3,6 +3,8 @@
 internal readonly struct ComponentFlags :
     IEquatable<ComponentFlags>
 {
+    public const int BitsCount = 64;
+
     public ulong Bits { get; }
 
     public ComponentFlags()
@@ -63,7 +65,7 @@ internal readonly struct ComponentFlags :
 
     private static void ValidateIndex(byte index)
     {
-        if (index < 0 || index >= 64)
+        if (index < 0 || index >= BitsCount)
         {
             throw new ArgumentOutOfRangeException(
                 nameof(index),
