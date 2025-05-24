@@ -88,7 +88,7 @@ public sealed class EntityContext :
         _entityMetadataStore.Set(
             entity,
             () => EntityMetadata.Default(),
-            metadata => metadata);
+            metadata => EntityMetadata.Default());
 
         return entity;
     }
