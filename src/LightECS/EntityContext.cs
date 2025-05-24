@@ -1,5 +1,4 @@
 ﻿using LightECS.Abstractions;
-using LightECS.Events;
 using LightECS.Utilities;
 using LightECS.Utilities.Abstractions;
 
@@ -12,11 +11,9 @@ public sealed class EntityContext :
 
     public const int InitialEntityPoolCapacity = 128;
 
-    public const int InitialComponentCapacity = 128;
+    public const int InitialComponentCapacity = 64;
 
     public const int InitialComponentStoreCapacity = 128;
-
-    public event EntityCreatedEventHandler? EntityCreated;
 
     private readonly EntityStore _entityStore;
 
@@ -88,7 +85,10 @@ public sealed class EntityContext :
 
         _entityStore.Add(entity);
 
-        EntityCreated?.Invoke(entity);
+        _entityMetadataStore.Set(
+            entity,
+            () => EntityMetadata.Default(),
+            metadata => metadata);
 
         return entity;
     }
@@ -96,14 +96,14 @@ public sealed class EntityContext :
     public void DestroyEntity(
         Entity entity)
     {
+        _entityStore.Remove(entity);
+
+        _entityPool.Return(entity);
+
         foreach (var componentStoreBase in _componentStoreRegistry.GetAll())
         {
             componentStoreBase.Unset(entity);
         }
-
-        _entityStore.Remove(entity);
-
-        _entityPool.Return(entity);
 
         _entityMetadataStore.Unset(entity);
     }

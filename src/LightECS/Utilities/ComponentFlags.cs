@@ -67,11 +67,16 @@ internal readonly struct ComponentFlags :
     public override int GetHashCode()
        => Bits.GetHashCode();
 
-    public static ComponentFlags CreateFromIndex(byte index)
+    public static ComponentFlags FromIndex(byte index)
     {
         var bits = CreateBitsFromIndex(index);
 
         return new ComponentFlags(bits);
+    }
+
+    public static ComponentFlags None()
+    {
+        return new ComponentFlags();
     }
 
     private static ulong CreateBitsFromIndex(byte index)

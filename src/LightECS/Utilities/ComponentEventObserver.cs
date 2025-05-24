@@ -53,7 +53,7 @@ internal sealed class ComponentEventObserver<TComponent> :
             entity,
             () => new EntityMetadata
             {
-                ComponentFlags = ComponentFlags.CreateFromIndex(
+                ComponentFlags = ComponentFlags.FromIndex(
                     componentFlagIndex)
             },
             (entityMetadata) => entityMetadata with
@@ -72,16 +72,12 @@ internal sealed class ComponentEventObserver<TComponent> :
 
         _entityMetadataStore.Set(
             entity,
-            () => new EntityMetadata
-            {
-                ComponentFlags = ComponentFlags.CreateFromIndex(
-                    componentFlagIndex)
-            },
+            () => EntityMetadata.Default(),
             (entityMetadata) => entityMetadata with
             {
                 ComponentFlags = entityMetadata
                     .ComponentFlags
-                    .SetFlagAtIndex(componentFlagIndex)
+                    .UnsetFlagAtIndex(componentFlagIndex)
             });
     }
 }

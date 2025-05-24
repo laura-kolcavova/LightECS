@@ -1,12 +1,8 @@
-﻿using LightECS.Events;
-
-namespace LightECS.Abstractions;
+﻿namespace LightECS.Abstractions;
 
 public interface IEntityContext :
     IDisposable
 {
-    public event EntityCreatedEventHandler? EntityCreated;
-
     public IContextState State { get; }
 
     public int EntitiesCount { get; }
