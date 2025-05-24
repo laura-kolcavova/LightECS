@@ -43,6 +43,8 @@ internal sealed class EntityMetadataStore
                     existingEntityMetadata);
 
                 _entityMetadataByEntities[entity.Id] = updatedEntityMetadata;
+
+                return;
             }
 
             var newEntityMetadata = addEntityMetadataFactory();
