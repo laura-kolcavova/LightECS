@@ -22,22 +22,43 @@ public sealed class ComponentStoreRegistryTests
     public void GetOrCreate_ShouldCreateNewStore_WhenNotExists()
     {
         // Arrange
-        var sut = new ComponentStoreRegistry(initialComponentStoreCapacity: 10);
+        var sut = new ComponentStoreRegistry(10, 10);
 
         // Act
-        var store = sut.GetOrCreate<TestComponentA>();
+        var store = sut.GetOrCreate<TestComponentA>(out var created);
 
         // Assert
         Assert.NotNull(store);
         Assert.Equal(0, store.Count);
+        Assert.True(created);
+    }
+
+    [Fact]
+    public void GetOrCreate_ShouldReturnStore_WhenExists()
+    {
+        // Arrange
+        var sut = new ComponentStoreRegistry(10, 10);
+
+        var expectedStore = sut.GetOrCreate<TestComponentA>(
+          out var _);
+
+        // Act
+        var retrievedStore = sut.GetOrCreate<TestComponentA>(
+            out var created);
+
+        // Assert
+        Assert.Same(expectedStore, retrievedStore);
+        Assert.False(created);
     }
 
     [Fact]
     public void GetStore_ShouldReturnStore_WhenExists()
     {
         // Arrange
-        var sut = new ComponentStoreRegistry(10);
-        var expectedStore = sut.GetOrCreate<TestComponentA>();
+        var sut = new ComponentStoreRegistry(10, 10);
+
+        var expectedStore = sut.GetOrCreate<TestComponentA>(
+            out var _);
 
         // Act
         var retrievedStore = sut.Get<TestComponentA>();
@@ -50,7 +71,7 @@ public sealed class ComponentStoreRegistryTests
     public void GetStore_ShouldThrow_WhenStoreNotExists()
     {
         // Arrange
-        var provider = new ComponentStoreRegistry(10);
+        var provider = new ComponentStoreRegistry(10, 10);
 
         // Act
         var act = () => provider.Get<TestComponentA>();
@@ -63,9 +84,10 @@ public sealed class ComponentStoreRegistryTests
     public void GetAllStores_ShouldReturnAllCreatedStores()
     {
         // Arrange
-        var provider = new ComponentStoreRegistry(10);
-        var storeA = provider.GetOrCreate<TestComponentA>();
-        var storeB = provider.GetOrCreate<TestComponentB>();
+        var provider = new ComponentStoreRegistry(10, 10);
+
+        var storeA = provider.GetOrCreate<TestComponentA>(out var _);
+        var storeB = provider.GetOrCreate<TestComponentB>(out var _);
 
         // Act
         var allStores = provider.GetAll().ToList();

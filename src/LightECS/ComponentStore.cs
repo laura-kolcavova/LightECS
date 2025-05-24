@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace LightECS;
 
-public class ComponentStore<TComponent> :
+public sealed class ComponentStore<TComponent> :
     IComponentStore<TComponent>
     where TComponent : IComponent
 {

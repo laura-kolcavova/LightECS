@@ -2,7 +2,8 @@
 
 namespace LightECS.Abstractions;
 
-public interface IEntityContext
+public interface IEntityContext :
+    IDisposable
 {
     public event EntityCreatedEventHandler? EntityCreated;
 

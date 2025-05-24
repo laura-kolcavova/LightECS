@@ -3,6 +3,6 @@
 namespace LightECS.Events;
 
 public delegate void ComponentAddedEventHandler<TComponent>(
-    in Entity entity,
-    in TComponent component)
+    Entity entity,
+    TComponent component)
     where TComponent : IComponent;

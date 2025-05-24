@@ -13,11 +13,13 @@ internal sealed class ComponentStoreRegistry :
     private readonly object _lock = new();
 
     public ComponentStoreRegistry(
+        int initialComponentCapacity,
         int initialComponentStoreCapacity)
     {
-        _initialComponentStoreCapacity = initialComponentStoreCapacity;
+        _componentStoresByType = new Dictionary<Type, IComponentStoreBase>(
+            initialComponentCapacity);
 
-        _componentStoresByType = [];
+        _initialComponentStoreCapacity = initialComponentStoreCapacity;
     }
 
     public IComponentStore<TComponent> Get<TComponent>()
@@ -36,7 +38,8 @@ internal sealed class ComponentStoreRegistry :
         return (ComponentStore<TComponent>)componentStoreBase;
     }
 
-    public IComponentStore<TComponent> GetOrCreate<TComponent>()
+    public IComponentStore<TComponent> GetOrCreate<TComponent>(
+        out bool created)
         where TComponent : IComponent
     {
         var componentType = typeof(TComponent);
@@ -47,6 +50,8 @@ internal sealed class ComponentStoreRegistry :
                 componentType,
                 out var componentStoreBase))
             {
+                created = false;
+
                 return (ComponentStore<TComponent>)componentStoreBase;
             }
 
@@ -54,6 +59,8 @@ internal sealed class ComponentStoreRegistry :
                 _initialComponentStoreCapacity);
 
             _componentStoresByType[componentType] = componentStore;
+
+            created = true;
 
             return componentStore;
         }

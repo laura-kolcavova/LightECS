@@ -12,9 +12,11 @@ internal sealed class ComponentFlagIndexRegistry :
 
     private byte _nextFlagIndex = 0;
 
-    public ComponentFlagIndexRegistry()
+    public ComponentFlagIndexRegistry(
+        int initialCapacity)
     {
-        _componentFlagIndexesByType = [];
+        _componentFlagIndexesByType = new Dictionary<Type, byte>(
+            initialCapacity);
     }
 
     public byte Get<TComponent>()

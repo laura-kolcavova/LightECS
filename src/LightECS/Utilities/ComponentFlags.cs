@@ -31,7 +31,7 @@ internal readonly struct ComponentFlags :
     public bool HasFlagAtIndex(
         byte index)
     {
-        var mask = CreateMaskFromIndex(index);
+        var mask = CreateBitsFromIndex(index);
 
         return (Bits & mask) == mask;
     }
@@ -39,7 +39,7 @@ internal readonly struct ComponentFlags :
     public ComponentFlags SetFlagAtIndex(
         byte index)
     {
-        var mask = CreateMaskFromIndex(index);
+        var mask = CreateBitsFromIndex(index);
 
         var newBits = Bits | mask;
 
@@ -49,14 +49,32 @@ internal readonly struct ComponentFlags :
     public ComponentFlags UnsetFlagAtIndex(
         byte index)
     {
-        var mask = CreateMaskFromIndex(index);
+        var mask = CreateBitsFromIndex(index);
 
         var newBits = Bits & ~mask;
 
         return new ComponentFlags(newBits);
     }
 
-    private static ulong CreateMaskFromIndex(byte index)
+    public bool Equals(ComponentFlags other)
+    {
+        return other.Bits == Bits;
+    }
+
+    public override bool Equals(object? obj)
+       => obj is ComponentFlags other && Equals(other);
+
+    public override int GetHashCode()
+       => Bits.GetHashCode();
+
+    public static ComponentFlags CreateFromIndex(byte index)
+    {
+        var bits = CreateBitsFromIndex(index);
+
+        return new ComponentFlags(bits);
+    }
+
+    private static ulong CreateBitsFromIndex(byte index)
     {
         ValidateIndex(index);
 
@@ -72,17 +90,6 @@ internal readonly struct ComponentFlags :
                 $"Index {index} must be between 0 and 63 (inclusive).");
         }
     }
-
-    public bool Equals(ComponentFlags other)
-    {
-        return other.Bits == Bits;
-    }
-
-    public override bool Equals(object? obj)
-       => obj is ComponentFlags other && Equals(other);
-
-    public override int GetHashCode()
-       => Bits.GetHashCode();
 
     public static ComponentFlags operator |(
         ComponentFlags left,

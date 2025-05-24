@@ -4,7 +4,7 @@ using LightECS.Utilities.Abstractions;
 
 namespace LightECS;
 
-public class EntityQuery :
+public sealed class EntityQuery :
     IEntityQuery
 {
     private readonly IEntityStore _entityStore;

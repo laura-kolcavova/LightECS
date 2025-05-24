@@ -30,7 +30,7 @@ internal sealed class EntityMetadataStore
 
     public void Set(
         Entity entity,
-        EntityMetadata newEntityMetadata,
+        Func<EntityMetadata> addEntityMetadataFactory,
         Func<EntityMetadata, EntityMetadata> updateEntityMetadataFactory)
     {
         lock (_lock)
@@ -45,7 +45,11 @@ internal sealed class EntityMetadataStore
                 _entityMetadataByEntities[entity.Id] = updatedEntityMetadata;
             }
 
-            _entityMetadataByEntities.Add(entity.Id, newEntityMetadata);
+            var newEntityMetadata = addEntityMetadataFactory();
+
+            _entityMetadataByEntities.Add(
+                entity.Id,
+                newEntityMetadata);
         }
     }
 

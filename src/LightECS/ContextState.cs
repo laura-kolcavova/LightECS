@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace LightECS;
 
-public class ContextState :
+public sealed class ContextState :
     IContextState
 {
     private readonly Dictionary<string, object?> _state;

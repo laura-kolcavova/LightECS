@@ -7,7 +7,7 @@ internal interface IEntityMetadataStore
 
     public void Set(
         Entity entity,
-        EntityMetadata newEntityMetadata,
+        Func<EntityMetadata> addEntityMetadataFactory,
         Func<EntityMetadata, EntityMetadata> updateEntityMetadataFactory);
 
     public void Unset(

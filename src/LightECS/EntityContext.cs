@@ -1,17 +1,22 @@
 ﻿using LightECS.Abstractions;
 using LightECS.Events;
 using LightECS.Utilities;
+using LightECS.Utilities.Abstractions;
 
 namespace LightECS;
 
-public class EntityContext :
+public sealed class EntityContext :
     IEntityContext
 {
     public const int InitialEntityStoreCapacity = 128;
 
     public const int InitialEntityPoolCapacity = 128;
 
+    public const int InitialComponentCapacity = 128;
+
     public const int InitialComponentStoreCapacity = 128;
+
+    public event EntityCreatedEventHandler? EntityCreated;
 
     private readonly EntityStore _entityStore;
 
@@ -23,9 +28,13 @@ public class EntityContext :
 
     private readonly ComponentStoreRegistry _componentStoreRegistry;
 
+    private readonly ComponentFlagIndexRegistry _componentFlagIndexRegistry;
+
+    private readonly List<IComponentEventObserverBase> _componentEventObservers;
+
     private readonly ContextState _contextState;
 
-    public event EntityCreatedEventHandler? EntityCreated;
+    private bool _disposed;
 
     public EntityContext()
     {
@@ -41,9 +50,27 @@ public class EntityContext :
         _entityMetadataStore = new EntityMetadataStore();
 
         _componentStoreRegistry = new ComponentStoreRegistry(
+            InitialComponentCapacity,
             InitialComponentStoreCapacity);
 
+        _componentFlagIndexRegistry = new ComponentFlagIndexRegistry(
+            InitialComponentCapacity);
+
+        _componentEventObservers = new List<IComponentEventObserverBase>(InitialComponentCapacity);
+
         _contextState = new ContextState();
+    }
+
+    ~EntityContext()
+    {
+        Dispose(false);
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+
+        GC.SuppressFinalize(this);
     }
 
     public IContextState State => _contextState;
@@ -90,8 +117,15 @@ public class EntityContext :
     public IComponentStore<TComponent> UseStore<TComponent>()
        where TComponent : IComponent
     {
-        return _componentStoreRegistry
-            .GetOrCreate<TComponent>();
+        var componentStore = _componentStoreRegistry
+            .GetOrCreate<TComponent>(out var created);
+
+        if (created)
+        {
+            BindComponentStore(componentStore);
+        }
+
+        return componentStore;
     }
 
     public void Set<TComponent>(
@@ -100,7 +134,12 @@ public class EntityContext :
        where TComponent : IComponent
     {
         var componentStore = _componentStoreRegistry
-            .GetOrCreate<TComponent>();
+            .GetOrCreate<TComponent>(out var created);
+
+        if (created)
+        {
+            BindComponentStore(componentStore);
+        }
 
         componentStore.Set(
             entity,
@@ -159,6 +198,24 @@ public class EntityContext :
         componentStore.Unset(entity);
     }
 
+    private void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            foreach (var componentEventObserver in _componentEventObservers)
+            {
+                componentEventObserver.DetachStore();
+            }
+        }
+
+        _disposed = true;
+    }
+
     private Entity CreateNewEntity()
     {
         var entityId = _sequentialEntityIdGenerator.NextId();
@@ -166,5 +223,19 @@ public class EntityContext :
         var entity = new Entity(entityId);
 
         return entity;
+    }
+
+    private void BindComponentStore<TComponent>(
+        IComponentStore<TComponent> componentStore)
+        where TComponent : IComponent
+    {
+        var componentEventObserver = new ComponentEventObserver<TComponent>(
+            _componentFlagIndexRegistry,
+            _entityMetadataStore);
+
+        componentEventObserver.AttachStore(
+            componentStore);
+
+        _componentEventObservers.Add(componentEventObserver);
     }
 }

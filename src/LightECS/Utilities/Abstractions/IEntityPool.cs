@@ -7,8 +7,8 @@ internal interface IEntityPool
     public Entity Get();
 
     public void Return(
-        Entity value);
+        Entity entity);
 
     public bool Contains(
-        Entity value);
+        Entity entity);
 }
