@@ -3,7 +3,7 @@ using LightECS.Events;
 
 namespace LightECS;
 
-public class EntityStore :
+public sealed class EntityStore :
     IEntityStore
 {
     private readonly HashSet<Entity> _entities;

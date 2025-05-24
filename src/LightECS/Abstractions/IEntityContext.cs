@@ -1,11 +1,8 @@
-﻿using LightECS.Events;
+﻿namespace LightECS.Abstractions;
 
-namespace LightECS.Abstractions;
-
-public interface IEntityContext
+public interface IEntityContext :
+    IDisposable
 {
-    public event EntityCreatedEventHandler? EntityCreated;
-
     public IContextState State { get; }
 
     public int EntitiesCount { get; }
@@ -44,7 +41,7 @@ public interface IEntityContext
         Entity entity)
         where TComponent : IComponent;
 
-    public void Remove<TComponent>(
+    public void Unset<TComponent>(
         Entity entity)
         where TComponent : IComponent;
 }

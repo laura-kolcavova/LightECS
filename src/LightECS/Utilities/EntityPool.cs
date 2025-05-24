@@ -1,10 +1,13 @@
-﻿namespace LightECS.Utilities;
+﻿using LightECS.Utilities.Abstractions;
 
-internal sealed class EntityPool
+namespace LightECS.Utilities;
+
+internal sealed class EntityPool :
+    IEntityPool
 {
     private readonly Func<Entity> _factory;
 
-    private readonly Stack<Entity> _stack;
+    private readonly Stack<uint> _entityStack;
 
     private readonly object _lock = new();
 
@@ -14,7 +17,7 @@ internal sealed class EntityPool
     {
         _factory = factory;
 
-        _stack = new Stack<Entity>(
+        _entityStack = new Stack<uint>(
             initialCapacity);
     }
 
@@ -26,15 +29,17 @@ internal sealed class EntityPool
     {
     }
 
-    public int Count => _stack.Count;
+    public int Count => _entityStack.Count;
 
     public Entity Get()
     {
         lock (_lock)
         {
-            if (_stack.TryPop(out var value))
+            if (_entityStack.TryPop(out var value))
             {
-                return value;
+                var entity = new Entity(value);
+
+                return entity;
             }
         }
 
@@ -42,21 +47,22 @@ internal sealed class EntityPool
     }
 
     public void Return(
-        Entity value)
+        Entity entity)
     {
         lock (_lock)
         {
-            if (_stack.Contains(value))
+            if (_entityStack.Contains(entity.Id))
             {
                 throw new InvalidOperationException("The entity has already been returned to the pool.");
             }
 
-            _stack.Push(value);
+            _entityStack.Push(entity.Id);
         }
     }
 
-    public bool Contains(Entity value)
+    public bool Contains(
+        Entity entity)
     {
-        return _stack.Contains(value);
+        return _entityStack.Contains(entity.Id);
     }
 }

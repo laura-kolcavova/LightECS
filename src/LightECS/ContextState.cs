@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace LightECS;
 
-public class ContextState :
+public sealed class ContextState :
     IContextState
 {
     private readonly Dictionary<string, object?> _state;
@@ -23,7 +23,7 @@ public class ContextState :
         }
     }
 
-    public bool Contains(
+    public bool Has(
         string key)
     {
         return _state.ContainsKey(key);
@@ -70,15 +70,13 @@ public class ContextState :
         return true;
     }
 
-    public TValue Set<TValue>(
+    public void Set<TValue>(
         string key,
         TValue value)
     {
         lock (_lock)
         {
             _state[key] = value;
-
-            return value;
         }
     }
 

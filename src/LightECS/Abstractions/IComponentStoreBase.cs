@@ -7,7 +7,7 @@ public interface IComponentStoreBase
     public bool Has(
         Entity entity);
 
-    public bool Remove(
+    public void Unset(
         Entity entity);
 
     public void Clear();

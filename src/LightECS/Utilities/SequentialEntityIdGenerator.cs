@@ -1,17 +1,20 @@
-﻿namespace LightECS.Utilities;
+﻿using LightECS.Utilities.Abstractions;
 
-internal sealed class EntityUniqueIdProvider
+namespace LightECS.Utilities;
+
+internal sealed class SequentialEntityIdGenerator :
+    ISequentialEntityIdGenerator
 {
     private readonly object _lock = new();
 
     private uint _nextEntityId = 0;
 
-    public uint GetCurrentId()
+    public uint GetLastId()
     {
         return _nextEntityId;
     }
 
-    public uint GetNextId()
+    public uint NextId()
     {
         lock (_lock)
         {

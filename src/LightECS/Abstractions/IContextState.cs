@@ -11,14 +11,14 @@ public interface IContextState
         string key,
         [MaybeNullWhen(false)] out TValue value);
 
-    public TValue Set<TValue>(
+    public void Set<TValue>(
         string key,
         TValue value);
 
     public void Unset(
         string key);
 
-    public bool Contains(
+    public bool Has(
         string key);
 
     public void Clear();

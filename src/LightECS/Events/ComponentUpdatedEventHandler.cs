@@ -3,7 +3,7 @@
 namespace LightECS.Events;
 
 public delegate void ComponentUpdatedEventHandler<TComponent>(
-    in Entity entity,
-    in TComponent oldComponent,
-    in TComponent newComponent)
+    Entity entity,
+    TComponent oldComponent,
+    TComponent newComponent)
     where TComponent : IComponent;
