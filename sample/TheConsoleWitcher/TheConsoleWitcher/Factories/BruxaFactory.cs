@@ -1,8 +1,8 @@
 ﻿using LightECS;
 using LightECS.Abstractions;
-using Samples.Components;
+using TheConsoleWitcher.Components;
 
-namespace Samples.Factories;
+namespace TheConsoleWitcher.Factories;
 
 internal sealed class BruxaFactory
 {

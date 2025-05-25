@@ -1,11 +1,11 @@
 ﻿using LightECS;
 using LightECS.Abstractions;
-using Samples.Components;
-using Samples.Factories;
-using Samples.Messages;
-using Samples.Systems.Abstractions;
+using TheConsoleWitcher.Components;
+using TheConsoleWitcher.Factories;
+using TheConsoleWitcher.Messages;
+using TheConsoleWitcher.Systems.Abstractions;
 
-namespace Samples.Systems;
+namespace TheConsoleWitcher.Systems;
 
 internal sealed class CombatSystem
     : IUpdateSystem

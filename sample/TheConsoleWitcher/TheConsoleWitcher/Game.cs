@@ -1,10 +1,10 @@
 ﻿using LightECS;
-using Samples.Components;
-using Samples.Factories;
-using Samples.Systems;
-using Samples.Systems.Abstractions;
+using TheConsoleWitcher.Components;
+using TheConsoleWitcher.Factories;
+using TheConsoleWitcher.Systems;
+using TheConsoleWitcher.Systems.Abstractions;
 
-namespace Samples;
+namespace TheConsoleWitcher;
 
 internal sealed class Game
 {

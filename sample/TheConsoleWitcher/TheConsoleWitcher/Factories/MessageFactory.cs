@@ -1,9 +1,9 @@
 ﻿using LightECS;
 using LightECS.Abstractions;
-using Samples.Components;
-using Samples.Messages.Abstractions;
+using TheConsoleWitcher.Components;
+using TheConsoleWitcher.Messages.Abstractions;
 
-namespace Samples.Factories;
+namespace TheConsoleWitcher.Factories;
 
 internal sealed class MessageFactory
 {

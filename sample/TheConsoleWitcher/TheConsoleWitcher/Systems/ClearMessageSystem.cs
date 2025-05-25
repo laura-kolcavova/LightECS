@@ -1,8 +1,8 @@
 ﻿using LightECS.Abstractions;
-using Samples.Components;
-using Samples.Systems.Abstractions;
+using TheConsoleWitcher.Components;
+using TheConsoleWitcher.Systems.Abstractions;
 
-namespace Samples.Systems;
+namespace TheConsoleWitcher.Systems;
 
 internal sealed class ClearMessageSystem
     : IUpdateSystem

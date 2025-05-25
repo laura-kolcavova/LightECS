@@ -1,4 +1,4 @@
-﻿using Samples;
+﻿using TheConsoleWitcher;
 
 var game = new Game();
 

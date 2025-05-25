@@ -1,6 +1,6 @@
 ﻿using LightECS.Abstractions;
 
-namespace Samples.Components;
+namespace TheConsoleWitcher.Components;
 
 internal sealed record CreatureComponent
     : IComponent
