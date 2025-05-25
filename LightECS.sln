@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XunitTests", "test\XunitTes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheConsoleWitcher", "sample\TheConsoleWitcher\TheConsoleWitcher\TheConsoleWitcher.csproj", "{E0A43C8E-4FB3-4726-BB4F-BDD92E454164}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheConsoleWitcher", "sample\TheConsoleWitcher\TheConsoleWitcher.csproj", "{E0A43C8E-4FB3-4726-BB4F-BDD92E454164}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
