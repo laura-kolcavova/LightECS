@@ -1,7 +1,7 @@
 ﻿using LightECS;
 using LightECS.Abstractions;
 
-namespace Samples.Components;
+namespace TheConsoleWitcher.Components;
 
 public sealed record CombatComponent
     : IComponent

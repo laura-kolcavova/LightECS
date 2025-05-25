@@ -1,4 +1,4 @@
-﻿namespace Samples.Systems.Abstractions;
+﻿namespace TheConsoleWitcher.Systems.Abstractions;
 
 internal interface IRenderSystem
 {

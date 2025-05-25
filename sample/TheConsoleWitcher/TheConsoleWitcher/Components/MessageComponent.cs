@@ -1,7 +1,7 @@
 ﻿using LightECS.Abstractions;
-using Samples.Messages.Abstractions;
+using TheConsoleWitcher.Messages.Abstractions;
 
-namespace Samples.Components;
+namespace TheConsoleWitcher.Components;
 
 internal sealed record MessageComponent
     : IComponent

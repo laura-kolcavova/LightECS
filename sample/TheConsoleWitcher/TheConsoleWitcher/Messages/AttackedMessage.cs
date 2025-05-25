@@ -1,6 +1,6 @@
-﻿using Samples.Messages.Abstractions;
+﻿using TheConsoleWitcher.Messages.Abstractions;
 
-namespace Samples.Messages;
+namespace TheConsoleWitcher.Messages;
 
 public sealed record AttackedMessage(
     string AttackerName,
