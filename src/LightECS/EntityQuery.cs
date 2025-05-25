@@ -55,9 +55,11 @@ public sealed class EntityQuery :
     {
         foreach (var entity in _entityStore.AsEnumerable())
         {
-            var entityComponentFlags = _entityMetadataStore
-                .Get(entity)
-                .ComponentFlags;
+            var entityMetadata = _entityMetadataStore.TryGet(entity, out var retrievedEntityMetadata)
+                ? retrievedEntityMetadata
+                : EntityMetadata.Default();
+
+            var entityComponentFlags = entityMetadata.ComponentFlags;
 
             if (entityComponentFlags.HasNoFlags ||
                 _componentFlags.HasNoFlags ||
