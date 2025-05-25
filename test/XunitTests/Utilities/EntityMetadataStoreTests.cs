@@ -46,6 +46,48 @@ public sealed class EntityMetadataStoreTests
     }
 
     [Fact]
+    public void TryGet_ShouldReturnTrue_AndOutputValue_WhenKeyExistsWithCorrectType()
+    {
+        // Arrange
+        var entity = new Entity(1);
+
+        var expectedEntityMetadata = EntityMetadata.Default() with
+        {
+            ComponentFlags = ComponentFlags.FromIndex(1)
+        };
+
+        var sut = new EntityMetadataStore();
+
+        sut.Set(
+            entity,
+            addEntityMetadataFactory: () => expectedEntityMetadata,
+            updateEntityMetadataFactory: _ => expectedEntityMetadata);
+
+        // Act
+        var success = sut.TryGet(entity, out var retrievedEntityMetadata);
+
+        // Assert
+        Assert.True(success);
+        Assert.Equal(expectedEntityMetadata, retrievedEntityMetadata);
+    }
+
+    [Fact]
+    public void TryGet_ShouldReturnFalse_AndDefaultOut_WhenKeyDoesNotExist()
+    {
+        // Arrange
+        var entity = new Entity(1);
+
+        var sut = new EntityMetadataStore();
+
+        // Act
+        var success = sut.TryGet(entity, out var retrievedEntityMetadata);
+
+        // Assert
+        Assert.False(success);
+        Assert.Equal(default, retrievedEntityMetadata);
+    }
+
+    [Fact]
     public void Set_ShouldAddMetadata_WhenEntityDoesNotExist()
     {
         // Arrange

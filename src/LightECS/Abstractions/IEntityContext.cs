@@ -20,6 +20,8 @@ public interface IEntityContext :
     public IComponentStore<TComponent> UseStore<TComponent>()
         where TComponent : IComponent;
 
+    public IEntityQuery UseQuery();
+
     public void Set<TComponent>(
         Entity entity,
         TComponent component)

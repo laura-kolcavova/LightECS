@@ -1,4 +1,5 @@
 ﻿using LightECS.Utilities.Abstractions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace LightECS.Utilities;
 
@@ -26,6 +27,15 @@ internal sealed class EntityMetadataStore
         }
 
         return entityMetadata;
+    }
+
+    public bool TryGet(
+        Entity entity,
+        [MaybeNullWhen(false)] out EntityMetadata entityMetadata)
+    {
+        return _entityMetadataByEntities.TryGetValue(
+            entity.Id,
+            out entityMetadata);
     }
 
     public void Set(

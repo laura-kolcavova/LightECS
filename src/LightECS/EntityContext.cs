@@ -128,6 +128,14 @@ public sealed class EntityContext :
         return componentStore;
     }
 
+    public IEntityQuery UseQuery()
+    {
+        return new EntityQuery(
+            _entityStore,
+            _entityMetadataStore,
+            _componentFlagIndexRegistry);
+    }
+
     public void Set<TComponent>(
        Entity entity,
        TComponent component)
