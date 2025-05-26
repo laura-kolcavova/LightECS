@@ -1,5 +1,4 @@
 ﻿using LightECS.Utilities.Abstractions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace LightECS.Utilities;
 
@@ -10,9 +9,16 @@ internal sealed class EntityMetadataStore
 
     private readonly object _lock = new();
 
-    public EntityMetadataStore()
+    public EntityMetadataStore(
+        int initialCapacity)
     {
-        _entityMetadataByEntities = [];
+        _entityMetadataByEntities = new Dictionary<uint, EntityMetadata>(
+            initialCapacity);
+    }
+
+    public EntityMetadataStore()
+        : this(0)
+    {
     }
 
     public EntityMetadata Get(
@@ -31,7 +37,7 @@ internal sealed class EntityMetadataStore
 
     public bool TryGet(
         Entity entity,
-        [MaybeNullWhen(false)] out EntityMetadata entityMetadata)
+        out EntityMetadata entityMetadata)
     {
         return _entityMetadataByEntities.TryGetValue(
             entity.Id,
