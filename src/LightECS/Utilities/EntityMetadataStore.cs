@@ -1,4 +1,5 @@
 ﻿using LightECS.Utilities.Abstractions;
+using LightECS.Utilities.Events;
 
 namespace LightECS.Utilities;
 
@@ -8,6 +9,10 @@ internal sealed class EntityMetadataStore
     private readonly Dictionary<uint, EntityMetadata> _entityMetadataByEntities;
 
     private readonly object _lock = new();
+
+    public event EntityMetadataSetEventHandler? EntityMetadataSet;
+
+    public event EntityMetadataUnsetEventHandler? EntityMetadataUnset;
 
     public EntityMetadataStore(
         int initialCapacity)
@@ -60,14 +65,19 @@ internal sealed class EntityMetadataStore
 
                 _entityMetadataByEntities[entity.Id] = updatedEntityMetadata;
 
+                EntityMetadataSet?.Invoke(entity, updatedEntityMetadata);
+
                 return;
             }
+
 
             var newEntityMetadata = addEntityMetadataFactory();
 
             _entityMetadataByEntities.Add(
                 entity.Id,
                 newEntityMetadata);
+
+            EntityMetadataSet?.Invoke(entity, newEntityMetadata);
         }
     }
 
@@ -78,6 +88,8 @@ internal sealed class EntityMetadataStore
         {
             _entityMetadataByEntities.Remove(
                 entity.Id);
+
+            EntityMetadataUnset?.Invoke(entity);
         }
     }
 }

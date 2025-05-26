@@ -59,7 +59,7 @@ public sealed class EntityQuery :
     public IEntityView AsView()
     {
         return new EntityView(
-            _entityStore,
+            _componentFlagIndexRegistry,
             _componentStoreRegistry,
             _entityMetadataStore,
             _componentFlags,
@@ -76,13 +76,7 @@ public sealed class EntityQuery :
 
             var entityComponentFlags = entityMetadata.ComponentFlags;
 
-            if (entityComponentFlags.HasNoFlags ||
-                _componentFlags.HasNoFlags)
-            {
-                continue;
-            }
-
-            if ((entityComponentFlags & _componentFlags) == _componentFlags)
+            if (_componentFlags.ContainsAll(entityComponentFlags))
             {
                 yield return entity;
             }

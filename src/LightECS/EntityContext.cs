@@ -133,7 +133,8 @@ public sealed class EntityContext :
         return new EntityQuery(
             _entityStore,
             _entityMetadataStore,
-            _componentFlagIndexRegistry);
+            _componentFlagIndexRegistry,
+            _componentStoreRegistry);
     }
 
     public void Set<TComponent>(
