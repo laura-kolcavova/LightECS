@@ -62,8 +62,12 @@ public sealed class EntityQuery :
             var entityComponentFlags = entityMetadata.ComponentFlags;
 
             if (entityComponentFlags.HasNoFlags ||
-                _componentFlags.HasNoFlags ||
-                (entityComponentFlags & _componentFlags) == _componentFlags)
+                _componentFlags.HasNoFlags)
+            {
+                continue;
+            }
+
+            if ((entityComponentFlags & _componentFlags) == _componentFlags)
             {
                 yield return entity;
             }

@@ -28,7 +28,7 @@ public sealed class ComponentFlagIndexRegistryTests
         var index = sut.Create<TestComponentA>();
 
         // Assert
-        Assert.Equal(1, index);
+        Assert.Equal(0, index);
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public sealed class ComponentFlagIndexRegistryTests
         var index = sut.GetOrCreate<TestComponentA>();
 
         // Assert
-        Assert.Equal(1, index);
+        Assert.Equal(0, index);
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public sealed class ComponentFlagIndexRegistryTests
         var index2 = sut.Create<TestComponentB>();
 
         // Assert
-        Assert.Equal(1, index1);
-        Assert.Equal(2, index2);
+        Assert.Equal(0, index1);
+        Assert.Equal(1, index2);
     }
 }

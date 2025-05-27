@@ -120,7 +120,7 @@ public sealed class ComponentEventObserverTests
 
         // Assert
         Assert.Equal(
-            ComponentFlags.FromIndex(1),
+            ComponentFlags.FromIndex(0),
             entityMetadataStore.Get(entity).ComponentFlags);
     }
 

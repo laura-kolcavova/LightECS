@@ -2,7 +2,7 @@
 
 internal interface ISequentialEntityIdGenerator
 {
-    public uint GetLastId();
+    public uint ReadNextId();
 
     public uint NextId();
 }
