@@ -38,10 +38,12 @@ internal sealed class ComponentStoreRegistry :
         return (ComponentStore<TComponent>)componentStoreBase;
     }
 
-    public IComponentStoreBase GetOrCreate(
-        Type componentType,
+    public IComponentStore<TComponent> GetOrCreate<TComponent>(
         out bool created)
+        where TComponent : IComponent
     {
+        var componentType = typeof(TComponent);
+
         lock (_lock)
         {
             if (_componentStoresByType.TryGetValue(
@@ -50,7 +52,7 @@ internal sealed class ComponentStoreRegistry :
             {
                 created = false;
 
-                return componentStoreBase;
+                return (ComponentStore<TComponent>)componentStoreBase; ;
             }
 
             var componentStore = new ComponentStore<TComponent>(
