@@ -92,7 +92,7 @@ public sealed class EntityView :
             _isActive = true;
         }
 
-        _entities = [.. _entityQuery.AsEnumerable()];
+        _entities = [.. _entityQuery];
 
         _entityMetadataStore.EntityMetadataSet += HandleEntityMetadataSet;
         _entityMetadataStore.EntityMetadataUnset += HandleEntityMetadataUnset;

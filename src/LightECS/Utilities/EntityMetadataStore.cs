@@ -70,7 +70,6 @@ internal sealed class EntityMetadataStore
                 return;
             }
 
-
             var newEntityMetadata = addEntityMetadataFactory();
 
             _entityMetadataByEntities.Add(
