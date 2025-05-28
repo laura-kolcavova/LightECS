@@ -89,13 +89,13 @@ public sealed class EntityView :
                 return;
             }
 
+            _entities = [.. _entityQuery];
+
+            _entityMetadataStore.EntityMetadataSet += HandleEntityMetadataSet;
+            _entityMetadataStore.EntityMetadataUnset += HandleEntityMetadataUnset;
+
             _isActive = true;
         }
-
-        _entities = [.. _entityQuery];
-
-        _entityMetadataStore.EntityMetadataSet += HandleEntityMetadataSet;
-        _entityMetadataStore.EntityMetadataUnset += HandleEntityMetadataUnset;
     }
 
     private void HandleEntityMetadataSet(
