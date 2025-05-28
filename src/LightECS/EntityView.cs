@@ -13,39 +13,31 @@ public sealed class EntityView :
 
     public event EntityRemovedEventHandler? EntityRemoved;
 
-    private readonly IComponentFlagIndexRegistry _componentFlagIndexRegistry;
-
-    private readonly IComponentStoreRegistry _componentStoreRegistry;
-
     private readonly IEntityMetadataStore _entityMetadataStore;
 
     private readonly ComponentFlags _componentFlags;
 
     private readonly IEnumerable<Entity> _entityQuery;
 
-    private readonly List<Entity> _entities;
-
     private readonly object _lock;
+
+    private HashSet<Entity> _entities;
 
     private bool _disposed;
 
     private bool _isActive;
 
     internal EntityView(
-        IComponentFlagIndexRegistry componentFlagIndexRegistry,
-        IComponentStoreRegistry componentStoreRegistry,
         IEntityMetadataStore entityMetadataStore,
         ComponentFlags componentFlags,
         IEnumerable<Entity> entityQuery)
     {
-        _componentFlagIndexRegistry = componentFlagIndexRegistry;
-        _componentStoreRegistry = componentStoreRegistry;
         _entityMetadataStore = entityMetadataStore;
         _componentFlags = componentFlags;
         _entityQuery = entityQuery;
 
-        _entities = [];
         _lock = new object();
+        _entities = [];
         _disposed = false;
         _isActive = false;
     }
@@ -100,7 +92,7 @@ public sealed class EntityView :
             _isActive = true;
         }
 
-        _entities.AddRange(_entityQuery.AsEnumerable());
+        _entities = [.. _entityQuery.AsEnumerable()];
 
         _entityMetadataStore.EntityMetadataSet += HandleEntityMetadataSet;
         _entityMetadataStore.EntityMetadataUnset += HandleEntityMetadataUnset;
@@ -110,14 +102,21 @@ public sealed class EntityView :
         Entity entity,
         EntityMetadata entityMetadata)
     {
-        if (_componentFlags.ContainsAll(entityMetadata.ComponentFlags))
+        if (_componentFlags.ContainsAll(entityMetadata.ComponentFlags) &&
+            !_entities.Contains(entity))
         {
-            // todo
+            _entities.Add(entity);
+
+            EntityAdded?.Invoke(entity);
         }
     }
 
     private void HandleEntityMetadataUnset(
         Entity entity)
     {
+        if (_entities.Remove(entity))
+        {
+            EntityRemoved?.Invoke(entity);
+        }
     }
 }

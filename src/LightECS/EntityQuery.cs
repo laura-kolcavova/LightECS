@@ -59,8 +59,6 @@ public sealed class EntityQuery :
     public IEntityView AsView()
     {
         return new EntityView(
-            _componentFlagIndexRegistry,
-            _componentStoreRegistry,
             _entityMetadataStore,
             _componentFlags,
             AsEnumerable());
