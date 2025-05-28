@@ -13,17 +13,21 @@ public sealed class EntityQuery :
 
     private readonly IComponentFlagIndexRegistry _componentFlagIndexRegistry;
 
+    private readonly IComponentStoreRegistry _componentStoreRegistry;
+
     private readonly ComponentFlags _componentFlags;
 
     internal EntityQuery(
         IEntityStore entityStore,
         IEntityMetadataStore entityMetadataStore,
         IComponentFlagIndexRegistry componentFlagIndexRegistry,
+        IComponentStoreRegistry componentStoreRegistry,
         ComponentFlags componentFlags = default)
     {
         _entityStore = entityStore;
         _entityMetadataStore = entityMetadataStore;
         _componentFlagIndexRegistry = componentFlagIndexRegistry;
+        _componentStoreRegistry = componentStoreRegistry;
         _componentFlags = componentFlags;
     }
 
@@ -34,6 +38,7 @@ public sealed class EntityQuery :
             entityQuery._entityStore,
             entityQuery._entityMetadataStore,
             entityQuery._componentFlagIndexRegistry,
+            entityQuery._componentStoreRegistry,
             componentFlags)
     {
     }
@@ -51,6 +56,16 @@ public sealed class EntityQuery :
             newComponentFlags);
     }
 
+    public IEntityView AsView()
+    {
+        return new EntityView(
+            _entityStore,
+            _componentStoreRegistry,
+            _entityMetadataStore,
+            _componentFlags,
+            AsEnumerable());
+    }
+
     public IEnumerable<Entity> AsEnumerable()
     {
         foreach (var entity in _entityStore.AsEnumerable())
@@ -62,8 +77,12 @@ public sealed class EntityQuery :
             var entityComponentFlags = entityMetadata.ComponentFlags;
 
             if (entityComponentFlags.HasNoFlags ||
-                _componentFlags.HasNoFlags ||
-                (entityComponentFlags & _componentFlags) == _componentFlags)
+                _componentFlags.HasNoFlags)
+            {
+                continue;
+            }
+
+            if ((entityComponentFlags & _componentFlags) == _componentFlags)
             {
                 yield return entity;
             }

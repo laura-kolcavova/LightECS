@@ -1,6 +1,6 @@
 ﻿namespace LightECS.Utilities;
 
-internal sealed record EntityMetadata
+internal readonly record struct EntityMetadata
 {
     public required ComponentFlags ComponentFlags { get; init; }
 

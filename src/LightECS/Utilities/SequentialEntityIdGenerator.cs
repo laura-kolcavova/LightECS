@@ -9,7 +9,7 @@ internal sealed class SequentialEntityIdGenerator :
 
     private uint _nextEntityId = 0;
 
-    public uint GetLastId()
+    public uint ReadNextId()
     {
         return _nextEntityId;
     }
@@ -18,7 +18,7 @@ internal sealed class SequentialEntityIdGenerator :
     {
         lock (_lock)
         {
-            return ++_nextEntityId;
+            return _nextEntityId++;
         }
     }
 }

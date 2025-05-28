@@ -27,7 +27,7 @@ public sealed class EntityMetadataStoreTests
         var result = sut.Get(entity);
 
         // Assert
-        Assert.Same(metadata, result);
+        Assert.Equal(metadata, result);
     }
 
     [Fact]
@@ -105,7 +105,7 @@ public sealed class EntityMetadataStoreTests
 
         // Assert
         var result = sut.Get(entity);
-        Assert.Same(metadata, result);
+        Assert.Equal(metadata, result);
     }
 
     [Fact]
@@ -136,7 +136,7 @@ public sealed class EntityMetadataStoreTests
 
         // Assert
         var result = sut.Get(entity);
-        Assert.Same(updatedMetadata, result);
+        Assert.Equal(updatedMetadata, result);
     }
 
     [Fact]

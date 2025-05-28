@@ -49,7 +49,7 @@ internal sealed class ComponentFlagIndexRegistry :
                 return flagIndex;
             }
 
-            flagIndex = ++_nextFlagIndex;
+            flagIndex = _nextFlagIndex++;
 
             _componentFlagIndexesByType.Add(
                 componentType,
@@ -73,7 +73,7 @@ internal sealed class ComponentFlagIndexRegistry :
                     $"Component type '{componentType.Name}' is already registered with a flag index.");
             }
 
-            var flagIndex = ++_nextFlagIndex;
+            var flagIndex = _nextFlagIndex++;
 
             _componentFlagIndexesByType.Add(
                 componentType,

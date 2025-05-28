@@ -44,7 +44,7 @@ public sealed class EntityContext :
             CreateNewEntity,
             InitialEntityPoolCapacity);
 
-        _entityMetadataStore = new EntityMetadataStore();
+        _entityMetadataStore = new EntityMetadataStore(InitialEntityStoreCapacity);
 
         _componentStoreRegistry = new ComponentStoreRegistry(
             InitialComponentCapacity,
