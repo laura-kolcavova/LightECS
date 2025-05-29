@@ -13,16 +13,11 @@ Management of systems is intentionally not included in this library. The main re
 - **Views:** Lazily-initialized, self-updating collections of entities matching a specific component composition. Automatically reflect changes as components are added or removed.
 - **Context State:** Key-value storage for custom runtime data, enabling systems to share context-specific values.
 
-## Getting Started
+## Basic Usage
 
-### Installation
-
-Add the LightECS project to your solution or reference the compiled DLL in your .NET project.
-
-### Basic Usage
-
-```
+```cs
 using LightECS;
+
 // Create an entity context
 var context = new EntityContext();
 
@@ -61,4 +56,7 @@ var entityStore = context.UseEntityStore();
 
 // Retrive a context state
 var state = context.State;
+
+// Destroy an entity
+context.DestroyEntity(entity);
 ```
