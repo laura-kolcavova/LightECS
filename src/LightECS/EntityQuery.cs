@@ -39,7 +39,6 @@ public sealed class EntityQuery :
     }
 
     public IEntityQuery With<TComponent>()
-        where TComponent : IComponent
     {
         var flagIndex = _componentFlagIndexRegistry.GetOrCreate<TComponent>();
 

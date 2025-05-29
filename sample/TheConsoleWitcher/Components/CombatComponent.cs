@@ -1,10 +1,8 @@
 ﻿using LightECS;
-using LightECS.Abstractions;
 
 namespace TheConsoleWitcher.Components;
 
 public sealed record CombatComponent
-    : IComponent
 {
     public float Damage { get; init; } = 0;
 

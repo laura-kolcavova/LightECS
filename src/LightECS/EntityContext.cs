@@ -115,7 +115,6 @@ public sealed class EntityContext :
     }
 
     public IComponentStore<TComponent> UseStore<TComponent>()
-       where TComponent : IComponent
     {
         var componentStore = _componentStoreRegistry
             .GetOrCreate<TComponent>(out var created);
@@ -139,7 +138,6 @@ public sealed class EntityContext :
     public void Set<TComponent>(
        Entity entity,
        TComponent component)
-       where TComponent : IComponent
     {
         var componentStore = _componentStoreRegistry
             .GetOrCreate<TComponent>(out var created);
@@ -156,7 +154,6 @@ public sealed class EntityContext :
 
     public TComponent Get<TComponent>(
         Entity entity)
-        where TComponent : IComponent
     {
         var componentStore = _componentStoreRegistry
             .Get<TComponent>();
@@ -167,7 +164,6 @@ public sealed class EntityContext :
     public bool TryGet<TComponent>(
         Entity entity,
         out TComponent? component)
-        where TComponent : IComponent
     {
         var componentStore = _componentStoreRegistry
             .Get<TComponent>();
@@ -178,7 +174,6 @@ public sealed class EntityContext :
     }
 
     public int Count<TComponent>()
-        where TComponent : IComponent
     {
         var componentStore = _componentStoreRegistry
             .Get<TComponent>();
@@ -188,7 +183,6 @@ public sealed class EntityContext :
 
     public bool Contains<TComponent>(
         Entity entity)
-        where TComponent : IComponent
     {
         var componentStore = _componentStoreRegistry
             .Get<TComponent>();
@@ -198,7 +192,6 @@ public sealed class EntityContext :
 
     public void Remove<TComponent>(
         Entity entity)
-        where TComponent : IComponent
     {
         var componentStore = _componentStoreRegistry
             .Get<TComponent>();
@@ -236,7 +229,6 @@ public sealed class EntityContext :
 
     private void BindComponentStore<TComponent>(
         IComponentStore<TComponent> componentStore)
-        where TComponent : IComponent
     {
         var componentEventObserver = new ComponentEventObserver<TComponent>(
             _componentFlagIndexRegistry,

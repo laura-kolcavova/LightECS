@@ -5,7 +5,6 @@ namespace LightECS.Abstractions;
 
 public interface IComponentStore<TComponent>
     : IComponentStoreBase
-    where TComponent : IComponent
 {
     public event ComponentAddedEventHandler<TComponent>? ComponentAdded;
 

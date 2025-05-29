@@ -23,7 +23,6 @@ internal sealed class ComponentStoreRegistry :
     }
 
     public IComponentStore<TComponent> Get<TComponent>()
-        where TComponent : IComponent
     {
         var componentType = typeof(TComponent);
 
@@ -40,7 +39,6 @@ internal sealed class ComponentStoreRegistry :
 
     public IComponentStore<TComponent> GetOrCreate<TComponent>(
         out bool created)
-        where TComponent : IComponent
     {
         var componentType = typeof(TComponent);
 

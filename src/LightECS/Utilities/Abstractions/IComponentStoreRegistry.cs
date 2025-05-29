@@ -4,12 +4,10 @@ namespace LightECS.Utilities.Abstractions;
 
 internal interface IComponentStoreRegistry
 {
-    public IComponentStore<TComponent> Get<TComponent>()
-        where TComponent : IComponent;
+    public IComponentStore<TComponent> Get<TComponent>();
 
     public IComponentStore<TComponent> GetOrCreate<TComponent>(
-        out bool created)
-        where TComponent : IComponent;
+        out bool created);
 
     public IReadOnlyCollection<IComponentStoreBase> GetAll();
 }
