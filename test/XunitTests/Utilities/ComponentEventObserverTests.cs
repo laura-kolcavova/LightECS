@@ -12,7 +12,7 @@ namespace XunitTests.Utilities;
 [Category("coverage")]
 public sealed class ComponentEventObserverTests
 {
-    public sealed record TestComponent : IComponent
+    public sealed record TestComponent
     {
         public required string Name { get; init; }
     }

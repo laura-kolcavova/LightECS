@@ -1,15 +1,10 @@
-﻿using LightECS.Abstractions;
-
-namespace LightECS.Utilities.Abstractions;
+﻿namespace LightECS.Utilities.Abstractions;
 
 internal interface IComponentFlagIndexRegistry
 {
-    public byte Get<TComponent>()
-       where TComponent : IComponent;
+    public byte Get<TComponent>();
 
-    public byte GetOrCreate<TComponent>()
-        where TComponent : IComponent;
+    public byte GetOrCreate<TComponent>();
 
-    public byte Create<TComponent>()
-        where TComponent : IComponent;
+    public byte Create<TComponent>();
 }

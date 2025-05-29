@@ -1,5 +1,4 @@
-﻿using LightECS.Abstractions;
-using LightECS.Utilities.Abstractions;
+﻿using LightECS.Utilities.Abstractions;
 
 namespace LightECS.Utilities;
 
@@ -20,7 +19,6 @@ internal sealed class ComponentFlagIndexRegistry :
     }
 
     public byte Get<TComponent>()
-        where TComponent : IComponent
     {
         var componentType = typeof(TComponent);
 
@@ -36,7 +34,6 @@ internal sealed class ComponentFlagIndexRegistry :
     }
 
     public byte GetOrCreate<TComponent>()
-        where TComponent : IComponent
     {
         var componentType = typeof(TComponent);
 
@@ -60,7 +57,6 @@ internal sealed class ComponentFlagIndexRegistry :
     }
 
     public byte Create<TComponent>()
-        where TComponent : IComponent
     {
         var componentType = typeof(TComponent);
 

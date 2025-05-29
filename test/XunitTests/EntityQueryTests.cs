@@ -11,7 +11,7 @@ namespace XunitTests;
 [Category("coverage")]
 public sealed class EntityQueryTests
 {
-    public sealed record TestComponent : IComponent
+    public sealed record TestComponent
     {
         public required string Name { get; init; }
     }

@@ -6,7 +6,6 @@ namespace LightECS;
 
 public sealed class ComponentStore<TComponent> :
     IComponentStore<TComponent>
-    where TComponent : IComponent
 {
     private readonly Dictionary<uint, TComponent> _componentsByEntities;
 

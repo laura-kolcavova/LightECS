@@ -1,9 +1,6 @@
-﻿using LightECS.Abstractions;
-
-namespace TheConsoleWitcher.Components;
+﻿namespace TheConsoleWitcher.Components;
 
 internal sealed record HealthComponent
-    : IComponent
 {
     public float Health { get; init; } = 100;
 

@@ -1,5 +1,4 @@
 ﻿using LightECS;
-using LightECS.Abstractions;
 using Xunit.Categories;
 
 namespace XunitTests;
@@ -8,7 +7,7 @@ namespace XunitTests;
 [Category("coverage")]
 public sealed class ComponentStoreTests
 {
-    public class TestComponent : IComponent
+    public class TestComponent
     {
         public string Name { get; set; } = string.Empty;
     }

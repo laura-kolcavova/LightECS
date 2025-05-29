@@ -5,7 +5,6 @@ namespace LightECS.Utilities;
 
 internal sealed class ComponentEventObserver<TComponent> :
     IComponentEventObserver<TComponent>
-    where TComponent : IComponent
 {
     private readonly IComponentFlagIndexRegistry _componentFlagIndexRegistry;
 

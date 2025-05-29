@@ -17,33 +17,26 @@ public interface IEntityContext :
     public bool EntityExists(
         Entity entity);
 
-    public IComponentStore<TComponent> UseStore<TComponent>()
-        where TComponent : IComponent;
-
     public IEntityQuery UseQuery();
+
+    public IComponentStore<TComponent> UseStore<TComponent>();
 
     public void Set<TComponent>(
         Entity entity,
-        TComponent component)
-        where TComponent : IComponent;
+        TComponent component);
 
     public TComponent Get<TComponent>(
-        Entity entity)
-        where TComponent : IComponent;
+        Entity entity);
 
     public bool TryGet<TComponent>(
         Entity entity,
-        out TComponent? component)
-        where TComponent : IComponent;
+        out TComponent? component);
 
-    public int Count<TComponent>()
-        where TComponent : IComponent;
+    public int Count<TComponent>();
 
     public bool Contains<TComponent>(
-        Entity entity)
-        where TComponent : IComponent;
+        Entity entity);
 
     public void Remove<TComponent>(
-        Entity entity)
-        where TComponent : IComponent;
+        Entity entity);
 }

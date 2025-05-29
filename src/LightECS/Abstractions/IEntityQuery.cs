@@ -2,8 +2,7 @@
 
 public interface IEntityQuery
 {
-    public IEntityQuery With<TComponent>()
-       where TComponent : IComponent;
+    public IEntityQuery With<TComponent>();
 
     public IEntityView AsView();
 
