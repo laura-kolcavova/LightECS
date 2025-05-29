@@ -193,4 +193,85 @@ public sealed class ComponentFlagsTests
         // Assert
         var ex = Assert.Throws<ArgumentOutOfRangeException>(act);
     }
+
+    [Fact]
+    public void ContainsAll_ShouldReturnFalse_WhenThisHasNoFlags()
+    {
+        // Arrange
+        var thisFlags = ComponentFlags.None();
+        var otherFlags = ComponentFlags.FromIndex(1);
+
+        // Act
+        var result = thisFlags.ContainsAll(otherFlags);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void ContainsAll_ShouldReturnFalse_WhenOtherHasNoFlags()
+    {
+        // Arrange
+        var thisFlags = ComponentFlags.FromIndex(1);
+        var otherFlags = ComponentFlags.None();
+
+        // Act
+        var result = thisFlags.ContainsAll(otherFlags);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void ContainsAll_ShouldReturnTrue_WhenThisContainsAllFlagsInOther()
+    {
+        // Arrange
+        var thisFlags = new ComponentFlags()
+            .SetFlagAtIndex(1)
+            .SetFlagAtIndex(2);
+
+        var otherFlags = ComponentFlags.FromIndex(1);
+
+        // Act
+        var result = thisFlags.ContainsAll(otherFlags);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void ContainsAll_ShouldReturnFalse_WhenThisDoesNotContainAllFlagsInOther()
+    {
+        // Arrange
+        var thisFlags = ComponentFlags.FromIndex(1);
+
+        var otherFlags = new ComponentFlags()
+            .SetFlagAtIndex(1)
+            .SetFlagAtIndex(3);
+
+        // Act
+        var result = thisFlags.ContainsAll(otherFlags);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void ContainsAll_ShouldReturnTrue_WhenBothFlagsAreEqual()
+    {
+        // Arrange
+        var thisFlags = new ComponentFlags()
+            .SetFlagAtIndex(1)
+            .SetFlagAtIndex(2);
+
+        var otherFlags = new ComponentFlags()
+            .SetFlagAtIndex(1)
+            .SetFlagAtIndex(2);
+
+        // Act
+        var result = thisFlags.ContainsAll(otherFlags);
+
+        // Assert
+        Assert.True(result);
+    }
 }

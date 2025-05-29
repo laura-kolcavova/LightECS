@@ -61,10 +61,18 @@ public sealed class EntityView :
             Activate();
         }
 
-        return _entities.AsEnumerable();
+        foreach (var entity in _entities)
+        {
+            // This checks if an entity is alive
+            if (_entityMetadataStore.Contains(entity))
+            {
+                yield return entity;
+            }
+        }
     }
 
-    private void Dispose(bool disposing)
+    private void Dispose(
+        bool disposing)
     {
         if (_disposed)
         {
@@ -102,7 +110,7 @@ public sealed class EntityView :
         Entity entity,
         EntityMetadata entityMetadata)
     {
-        if (_componentFlags.ContainsAll(entityMetadata.ComponentFlags) &&
+        if (IsMatchWithComponentFlags(entityMetadata.ComponentFlags) &&
             !_entities.Contains(entity))
         {
             _entities.Add(entity);
@@ -112,11 +120,19 @@ public sealed class EntityView :
     }
 
     private void HandleEntityMetadataUnset(
-        Entity entity)
+        Entity entity,
+        EntityMetadata entityMetadata)
     {
-        if (_entities.Remove(entity))
+        if (IsMatchWithComponentFlags(entityMetadata.ComponentFlags) &&
+            _entities.Remove(entity))
         {
             EntityRemoved?.Invoke(entity);
         }
+    }
+
+    private bool IsMatchWithComponentFlags(
+        ComponentFlags componentFlags)
+    {
+        return componentFlags.ContainsAll(_componentFlags);
     }
 }

@@ -23,4 +23,7 @@ internal interface IEntityMetadataStore
 
     public void Unset(
         Entity entity);
+
+    public bool Contains(
+        Entity entity);
 }

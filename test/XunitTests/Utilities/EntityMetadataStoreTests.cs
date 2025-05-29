@@ -175,4 +175,61 @@ public sealed class EntityMetadataStoreTests
         // Assert
         Assert.Null(exception);
     }
+
+    [Fact]
+    public void Contains_ShouldReturnFalse_WhenEntityIsNotPresent()
+    {
+        // Arrange
+        var entity = new Entity(1);
+
+        var sut = new EntityMetadataStore();
+
+        // Act
+        var result = sut.Contains(entity);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void Contains_ShouldReturnTrue_WhenEntityIsPresent()
+    {
+        // Arrange
+        var entity = new Entity(42);
+
+        var sut = new EntityMetadataStore();
+
+        sut.Set(
+            entity,
+            () => EntityMetadata.Default(),
+            existing => existing);
+
+        // Act
+        var result = sut.Contains(entity);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void Contains_ShouldReturnFalse_WhenEntityWasUnset()
+    {
+        // Arrange
+        var entity = new Entity(99);
+
+        var sut = new EntityMetadataStore();
+
+        sut.Set(
+            entity,
+            () => EntityMetadata.Default(),
+            existing => existing);
+
+        sut.Unset(entity);
+
+        // Act
+        var result = sut.Contains(entity);
+
+        // Assert
+        Assert.False(result);
+    }
 }

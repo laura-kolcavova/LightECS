@@ -85,10 +85,21 @@ internal sealed class EntityMetadataStore
     {
         lock (_lock)
         {
-            _entityMetadataByEntities.Remove(
-                entity.Id);
-
-            EntityMetadataUnset?.Invoke(entity);
+            if (_entityMetadataByEntities.Remove(
+                entity.Id,
+                out var entityMetadata))
+            {
+                EntityMetadataUnset?.Invoke(
+                    entity,
+                    entityMetadata);
+            }
         }
+    }
+
+    public bool Contains(
+        Entity entity)
+    {
+        return _entityMetadataByEntities.ContainsKey(
+            entity.Id);
     }
 }

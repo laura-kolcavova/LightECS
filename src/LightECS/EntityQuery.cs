@@ -67,12 +67,18 @@ public sealed class EntityQuery :
                 ? retrievedEntityMetadata
                 : EntityMetadata.Default();
 
-            var entityComponentFlags = entityMetadata.ComponentFlags;
+            var componentFlags = entityMetadata.ComponentFlags;
 
-            if (_componentFlags.ContainsAll(entityComponentFlags))
+            if (IsMatchWithComponentFlags(componentFlags))
             {
                 yield return entity;
             }
         }
+    }
+
+    private bool IsMatchWithComponentFlags(
+        ComponentFlags componentFlags)
+    {
+        return componentFlags.ContainsAll(_componentFlags);
     }
 }

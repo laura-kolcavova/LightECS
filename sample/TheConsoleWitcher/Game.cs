@@ -28,9 +28,6 @@ internal sealed class Game
         var bruxaFactory = new BruxaFactory(_context);
         var messageFactory = new MessageFactory(_context);
 
-        var geralt = geraltFactory.Create();
-        var bruxa = bruxaFactory.Create();
-
         AddUpdateSystems([
             new ClearMessageSystem(_context),
             new ClearDeadCreatureSystem(_context),
@@ -41,6 +38,9 @@ internal sealed class Game
             new RenderHealthSystem(_context),
             new RenderMessageSystem(_context)
         ]);
+
+        var geralt = geraltFactory.Create();
+        var bruxa = bruxaFactory.Create();
 
         var geraltCombatData = _context.Get<CombatComponent>(geralt);
         var bruxaCombatData = _context.Get<CombatComponent>(bruxa);
