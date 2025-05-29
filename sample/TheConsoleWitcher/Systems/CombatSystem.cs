@@ -20,6 +20,8 @@ internal sealed class CombatSystem
 
     private readonly IComponentStore<CombatComponent> _combatStore;
 
+    private readonly IEntityView _entityView;
+
     public CombatSystem(
         IEntityContext entityContext,
         MessageFactory messageFactory)
@@ -31,19 +33,18 @@ internal sealed class CombatSystem
         _creatureStore = entityContext.UseStore<CreatureComponent>();
         _healthStore = entityContext.UseStore<HealthComponent>();
         _combatStore = entityContext.UseStore<CombatComponent>();
-    }
 
-    public void Update()
-    {
-        var entities = _entityContext
+        _entityView = entityContext
             .UseQuery()
             .With<CreatureComponent>()
             .With<HealthComponent>()
             .With<CombatComponent>()
-            .AsEnumerable()
-            .ToList();
+            .AsView();
+    }
 
-        foreach (var entity in entities)
+    public void Update()
+    {
+        foreach (var entity in _entityView.AsEnumerable())
         {
             var combatData = _combatStore.Get(entity);
 

@@ -9,21 +9,22 @@ internal sealed class ClearMessageSystem
 {
     private readonly IEntityContext _entityContext;
 
+    private readonly IEntityView _entityView;
+
     public ClearMessageSystem(
         IEntityContext entityContext)
     {
         _entityContext = entityContext;
+
+        _entityView = _entityContext
+            .UseQuery()
+            .With<MessageComponent>()
+            .AsView();
     }
 
     public void Update()
     {
-        var entities = _entityContext
-            .UseQuery()
-            .With<MessageComponent>()
-            .AsEnumerable()
-            .ToList();
-
-        foreach (var entity in entities)
+        foreach (var entity in _entityView.AsEnumerable())
         {
             _entityContext.DestroyEntity(entity);
         }

@@ -10,26 +10,29 @@ internal sealed class RenderHealthSystem
     private readonly IEntityContext _entityContext;
 
     private readonly IComponentStore<CreatureComponent> _creatureStore;
+
     private readonly IComponentStore<HealthComponent> _healthStore;
+
+    private readonly IEntityView _entityView;
 
     public RenderHealthSystem(
         IEntityContext entityContext)
     {
         _entityContext = entityContext;
+
         _creatureStore = _entityContext.UseStore<CreatureComponent>();
         _healthStore = _entityContext.UseStore<HealthComponent>();
+
+        _entityView = _entityContext
+            .UseQuery()
+            .With<CreatureComponent>()
+            .With<HealthComponent>()
+            .AsView();
     }
 
     public void Render()
     {
-        var entities = _entityContext
-            .UseQuery()
-            .With<CreatureComponent>()
-            .With<HealthComponent>()
-            .AsEnumerable()
-            .ToList();
-
-        foreach (var entity in entities)
+        foreach (var entity in _entityView.AsEnumerable())
         {
             var creatureData = _creatureStore.Get(entity);
             var healthData = _healthStore.Get(entity);

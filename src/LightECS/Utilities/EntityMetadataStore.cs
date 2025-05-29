@@ -1,4 +1,5 @@
 ﻿using LightECS.Utilities.Abstractions;
+using LightECS.Utilities.Events;
 
 namespace LightECS.Utilities;
 
@@ -8,6 +9,10 @@ internal sealed class EntityMetadataStore
     private readonly Dictionary<uint, EntityMetadata> _entityMetadataByEntities;
 
     private readonly object _lock = new();
+
+    public event EntityMetadataSetEventHandler? EntityMetadataSet;
+
+    public event EntityMetadataUnsetEventHandler? EntityMetadataUnset;
 
     public EntityMetadataStore(
         int initialCapacity)
@@ -60,6 +65,8 @@ internal sealed class EntityMetadataStore
 
                 _entityMetadataByEntities[entity.Id] = updatedEntityMetadata;
 
+                EntityMetadataSet?.Invoke(entity, updatedEntityMetadata);
+
                 return;
             }
 
@@ -68,6 +75,8 @@ internal sealed class EntityMetadataStore
             _entityMetadataByEntities.Add(
                 entity.Id,
                 newEntityMetadata);
+
+            EntityMetadataSet?.Invoke(entity, newEntityMetadata);
         }
     }
 
@@ -76,8 +85,21 @@ internal sealed class EntityMetadataStore
     {
         lock (_lock)
         {
-            _entityMetadataByEntities.Remove(
-                entity.Id);
+            if (_entityMetadataByEntities.Remove(
+                entity.Id,
+                out var entityMetadata))
+            {
+                EntityMetadataUnset?.Invoke(
+                    entity,
+                    entityMetadata);
+            }
         }
+    }
+
+    public bool Contains(
+        Entity entity)
+    {
+        return _entityMetadataByEntities.ContainsKey(
+            entity.Id);
     }
 }

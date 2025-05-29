@@ -206,7 +206,8 @@ public sealed class EntityContext :
         componentStore.Unset(entity);
     }
 
-    private void Dispose(bool disposing)
+    private void Dispose(
+        bool disposing)
     {
         if (_disposed)
         {

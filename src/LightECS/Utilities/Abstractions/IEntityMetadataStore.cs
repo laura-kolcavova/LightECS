@@ -1,9 +1,14 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using LightECS.Utilities.Events;
+using System.Diagnostics.CodeAnalysis;
 
 namespace LightECS.Utilities.Abstractions;
 
 internal interface IEntityMetadataStore
 {
+    public event EntityMetadataSetEventHandler? EntityMetadataSet;
+
+    public event EntityMetadataUnsetEventHandler? EntityMetadataUnset;
+
     public EntityMetadata Get(
        Entity entity);
 
@@ -17,5 +22,8 @@ internal interface IEntityMetadataStore
         Func<EntityMetadata, EntityMetadata> updateEntityMetadataFactory);
 
     public void Unset(
+        Entity entity);
+
+    public bool Contains(
         Entity entity);
 }

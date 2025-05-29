@@ -56,6 +56,16 @@ internal readonly struct ComponentFlags :
         return new ComponentFlags(newBits);
     }
 
+    public bool ContainsAll(ComponentFlags other)
+    {
+        if (this.HasNoFlags || other.HasNoFlags)
+        {
+            return false;
+        }
+
+        return (this & other) == other;
+    }
+
     public bool Equals(ComponentFlags other)
     {
         return other.Bits == Bits;

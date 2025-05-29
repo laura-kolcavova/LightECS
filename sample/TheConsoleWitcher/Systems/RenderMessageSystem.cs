@@ -12,22 +12,26 @@ internal sealed class RenderMessageSystem :
 
     private readonly IComponentStore<MessageComponent> _messageStore;
 
+    private readonly IEntityView _entityView;
+
     public RenderMessageSystem(
         IEntityContext entityContext)
     {
         _entityContext = entityContext;
         _messageStore = _entityContext.UseStore<MessageComponent>();
+
+        _entityView = _entityContext
+            .UseQuery()
+            .With<MessageComponent>()
+            .AsView();
     }
 
     public void Render()
     {
-        var messagesDataList = _entityContext
-            .UseQuery()
-            .With<MessageComponent>()
+        var messagesDataList = _entityView
             .AsEnumerable()
             .Select(_messageStore.Get)
-            .OrderBy(messageData => messageData.Timestamp)
-            .ToList();
+            .OrderBy(messageData => messageData.Timestamp);
 
         foreach (var messageData in messagesDataList)
         {

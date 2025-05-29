@@ -11,23 +11,24 @@ internal sealed class ClearDeadCreatureSystem :
 
     private readonly IComponentStore<HealthComponent> _healthStore;
 
+    private readonly IEntityView _entityView;
+
     public ClearDeadCreatureSystem(
         IEntityContext entityContext)
     {
         _entityContext = entityContext;
 
         _healthStore = entityContext.UseStore<HealthComponent>();
+
+        _entityView = entityContext
+            .UseQuery()
+            .With<HealthComponent>()
+            .AsView();
     }
 
     public void Update()
     {
-        var entities = _entityContext
-           .UseQuery()
-           .With<HealthComponent>()
-           .AsEnumerable()
-           .ToList();
-
-        foreach (var entity in entities)
+        foreach (var entity in _entityView.AsEnumerable())
         {
             var healthData = _healthStore.Get(entity);
 

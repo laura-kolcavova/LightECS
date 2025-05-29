@@ -52,7 +52,7 @@ internal sealed class ComponentStoreRegistry :
             {
                 created = false;
 
-                return (ComponentStore<TComponent>)componentStoreBase;
+                return (ComponentStore<TComponent>)componentStoreBase; ;
             }
 
             var componentStore = new ComponentStore<TComponent>(
