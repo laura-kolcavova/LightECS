@@ -39,7 +39,7 @@ public sealed class ComponentStoreTests
 
         // Assert
         Assert.Equal(1, store.Count);
-        Assert.True(store.Has(entity));
+        Assert.True(store.Contains(entity));
     }
 
     [Fact]
@@ -106,7 +106,7 @@ public sealed class ComponentStoreTests
     }
 
     [Fact]
-    public void Has_ShouldReturnTrue_WhenComponentExists()
+    public void Contains_ShouldReturnTrue_WhenComponentExists()
     {
         // Arrange
         var store = new ComponentStore<TestComponent>();
@@ -114,21 +114,21 @@ public sealed class ComponentStoreTests
         store.Set(entity, new TestComponent());
 
         // Act
-        var result = store.Has(entity);
+        var result = store.Contains(entity);
 
         // Assert
         Assert.True(result);
     }
 
     [Fact]
-    public void Has_ShouldReturnFalse_WhenComponentNotExists()
+    public void Contains_ShouldReturnFalse_WhenComponentNotExists()
     {
         // Arrange
         var store = new ComponentStore<TestComponent>();
         var entity = new Entity(99);
 
         // Act
-        var result = store.Has(entity);
+        var result = store.Contains(entity);
 
         // Assert
         Assert.False(result);
@@ -143,25 +143,10 @@ public sealed class ComponentStoreTests
         store.Set(entity, new TestComponent());
 
         // Act
-        store.Unset(entity);
+        store.Remove(entity);
 
         // Assert
-        Assert.False(store.Has(entity));
-    }
-
-    [Fact]
-    public void Clear_ShouldRemoveAllComponents()
-    {
-        // Arrange
-        var store = new ComponentStore<TestComponent>();
-        store.Set(new Entity(1), new TestComponent());
-        store.Set(new Entity(2), new TestComponent());
-
-        // Act
-        store.Clear();
-
-        // Assert
-        Assert.Equal(0, store.Count);
+        Assert.False(store.Contains(entity));
     }
 
     [Fact]

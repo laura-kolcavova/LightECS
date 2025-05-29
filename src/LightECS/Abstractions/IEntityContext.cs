@@ -39,11 +39,11 @@ public interface IEntityContext :
     public int Count<TComponent>()
         where TComponent : IComponent;
 
-    public bool Has<TComponent>(
+    public bool Contains<TComponent>(
         Entity entity)
         where TComponent : IComponent;
 
-    public void Unset<TComponent>(
+    public void Remove<TComponent>(
         Entity entity)
         where TComponent : IComponent;
 }

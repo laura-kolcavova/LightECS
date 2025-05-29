@@ -23,7 +23,7 @@ public sealed class ContextState :
         }
     }
 
-    public bool Has(
+    public bool Contains(
         string key)
     {
         return _state.ContainsKey(key);
@@ -80,7 +80,7 @@ public sealed class ContextState :
         }
     }
 
-    public void Unset(
+    public void Remove(
         string key)
     {
         lock (_lock)

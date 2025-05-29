@@ -82,7 +82,7 @@ public sealed class EntityView :
         if (disposing)
         {
             _entityMetadataStore.EntityMetadataSet -= HandleEntityMetadataSet;
-            _entityMetadataStore.EntityMetadataUnset -= HandleEntityMetadataUnset;
+            _entityMetadataStore.EntityMetadataUnset -= HandleEntityMetadataRemoved;
         }
 
         _disposed = true;
@@ -100,7 +100,7 @@ public sealed class EntityView :
             _entities = [.. _entityQuery];
 
             _entityMetadataStore.EntityMetadataSet += HandleEntityMetadataSet;
-            _entityMetadataStore.EntityMetadataUnset += HandleEntityMetadataUnset;
+            _entityMetadataStore.EntityMetadataUnset += HandleEntityMetadataRemoved;
 
             _isActive = true;
         }
@@ -119,7 +119,7 @@ public sealed class EntityView :
         }
     }
 
-    private void HandleEntityMetadataUnset(
+    private void HandleEntityMetadataRemoved(
         Entity entity,
         EntityMetadata entityMetadata)
     {

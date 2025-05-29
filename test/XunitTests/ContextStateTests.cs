@@ -20,7 +20,7 @@ public sealed class ContextStateTests
         state.Set(key, value);
 
         // Assert
-        Assert.True(state.Has(key));
+        Assert.True(state.Contains(key));
     }
 
     [Fact]
@@ -122,7 +122,7 @@ public sealed class ContextStateTests
     }
 
     [Fact]
-    public void Unset_ShouldRemoveKey()
+    public void Remove_ShouldRemoveKey()
     {
         // Arrange
         var state = new ContextState();
@@ -132,10 +132,10 @@ public sealed class ContextStateTests
         state.Set(key, "value");
 
         // Act
-        state.Unset(key);
+        state.Remove(key);
 
         // Assert
-        Assert.False(state.Has(key));
+        Assert.False(state.Contains(key));
     }
 
     [Fact]
@@ -151,12 +151,12 @@ public sealed class ContextStateTests
         state.Clear();
 
         // Assert
-        Assert.False(state.Has("key1"));
-        Assert.False(state.Has("key2"));
+        Assert.False(state.Contains("key1"));
+        Assert.False(state.Contains("key2"));
     }
 
     [Fact]
-    public void Has_ShouldReturnTrue_WhenKeyExists()
+    public void Contains_ShouldReturnTrue_WhenKeyExists()
     {
         // Arrange
         var state = new ContextState();
@@ -164,20 +164,20 @@ public sealed class ContextStateTests
         state.Set("existing", 10);
 
         // Act
-        var result = state.Has("existing");
+        var result = state.Contains("existing");
 
         // Assert
         Assert.True(result);
     }
 
     [Fact]
-    public void Has_ShouldReturnFalse_WhenKeyDoesNotExist()
+    public void Contains_ShouldReturnFalse_WhenKeyDoesNotExist()
     {
         // Arrange
         var state = new ContextState();
 
         // Act
-        var result = state.Has("missing");
+        var result = state.Contains("missing");
 
         // Assert
         Assert.False(result);

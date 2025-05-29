@@ -83,14 +83,14 @@ public sealed class ComponentStore<TComponent> :
             out component);
     }
 
-    public bool Has(
+    public bool Contains(
         Entity entity)
     {
         return _componentsByEntities.ContainsKey(
             entity.Id);
     }
 
-    public void Unset(
+    public void Remove(
         Entity entity)
     {
         lock (_lock)
@@ -102,11 +102,6 @@ public sealed class ComponentStore<TComponent> :
                 ComponentRemoved?.Invoke(entity, component);
             }
         }
-    }
-
-    public void Clear()
-    {
-        _componentsByEntities.Clear();
     }
 
     public IEnumerable<TComponent> AsEnumerable()

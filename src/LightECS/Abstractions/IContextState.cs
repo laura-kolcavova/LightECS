@@ -15,11 +15,9 @@ public interface IContextState
         string key,
         TValue value);
 
-    public void Unset(
+    public void Remove(
         string key);
 
-    public bool Has(
+    public bool Contains(
         string key);
-
-    public void Clear();
 }

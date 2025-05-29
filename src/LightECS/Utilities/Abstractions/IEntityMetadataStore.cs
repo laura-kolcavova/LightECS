@@ -7,7 +7,7 @@ internal interface IEntityMetadataStore
 {
     public event EntityMetadataSetEventHandler? EntityMetadataSet;
 
-    public event EntityMetadataUnsetEventHandler? EntityMetadataUnset;
+    public event EntityMetadataRemovedEventHandler? EntityMetadataUnset;
 
     public EntityMetadata Get(
        Entity entity);
@@ -21,7 +21,7 @@ internal interface IEntityMetadataStore
         Func<EntityMetadata> addEntityMetadataFactory,
         Func<EntityMetadata, EntityMetadata> updateEntityMetadataFactory);
 
-    public void Unset(
+    public void Remove(
         Entity entity);
 
     public bool Contains(
