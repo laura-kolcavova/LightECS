@@ -140,7 +140,7 @@ public sealed class EntityMetadataStoreTests
     }
 
     [Fact]
-    public void Unset_ShouldRemoveMetadata_WhenEntityExists()
+    public void Remove_ShouldRemoveMetadata_WhenEntityExists()
     {
         // Arrange
         var entity = new Entity(123);
@@ -155,14 +155,14 @@ public sealed class EntityMetadataStoreTests
             updateEntityMetadataFactory: _ => metadata);
 
         // Act
-        sut.Unset(entity);
+        sut.Remove(entity);
 
         // Assert
         Assert.Throws<InvalidOperationException>(() => sut.Get(entity));
     }
 
     [Fact]
-    public void Unset_ShouldNotThrow_WhenEntityDoesNotExist()
+    public void Remove_ShouldNotThrow_WhenEntityDoesNotExist()
     {
         // Arrange
         var entity = new Entity(404);
@@ -170,7 +170,7 @@ public sealed class EntityMetadataStoreTests
         var sut = new EntityMetadataStore();
 
         // Act
-        var exception = Record.Exception(() => sut.Unset(entity));
+        var exception = Record.Exception(() => sut.Remove(entity));
 
         // Assert
         Assert.Null(exception);
@@ -212,7 +212,7 @@ public sealed class EntityMetadataStoreTests
     }
 
     [Fact]
-    public void Contains_ShouldReturnFalse_WhenEntityWasUnset()
+    public void Contains_ShouldReturnFalse_WhenEntityWasRemoved()
     {
         // Arrange
         var entity = new Entity(99);
@@ -224,7 +224,7 @@ public sealed class EntityMetadataStoreTests
             () => EntityMetadata.Default(),
             existing => existing);
 
-        sut.Unset(entity);
+        sut.Remove(entity);
 
         // Act
         var result = sut.Contains(entity);

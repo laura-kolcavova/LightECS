@@ -147,7 +147,7 @@ public sealed class ComponentEventObserverTests
         componentStore.Set(entity, component);
 
         // Act
-        componentStore.Unset(entity);
+        componentStore.Remove(entity);
 
         // Assert
         Assert.Equal(

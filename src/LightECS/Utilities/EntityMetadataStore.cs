@@ -12,7 +12,7 @@ internal sealed class EntityMetadataStore
 
     public event EntityMetadataSetEventHandler? EntityMetadataSet;
 
-    public event EntityMetadataUnsetEventHandler? EntityMetadataUnset;
+    public event EntityMetadataRemovedEventHandler? EntityMetadataUnset;
 
     public EntityMetadataStore(
         int initialCapacity)
@@ -80,7 +80,7 @@ internal sealed class EntityMetadataStore
         }
     }
 
-    public void Unset(
+    public void Remove(
         Entity entity)
     {
         lock (_lock)

@@ -4,11 +4,9 @@ public interface IComponentStoreBase
 {
     public int Count { get; }
 
-    public bool Has(
+    public bool Contains(
         Entity entity);
 
-    public void Unset(
+    public void Remove(
         Entity entity);
-
-    public void Clear();
 }
