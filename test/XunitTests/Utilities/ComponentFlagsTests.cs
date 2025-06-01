@@ -195,35 +195,35 @@ public sealed class ComponentFlagsTests
     }
 
     [Fact]
-    public void ContainsAll_ShouldReturnFalse_WhenThisHasNoFlags()
+    public void HasFlags_ShouldReturnFalse_WhenThisHasNoFlags()
     {
         // Arrange
         var thisFlags = ComponentFlags.None();
         var otherFlags = ComponentFlags.FromIndex(1);
 
         // Act
-        var result = thisFlags.ContainsAll(otherFlags);
+        var result = thisFlags.HasFlags(otherFlags);
 
         // Assert
         Assert.False(result);
     }
 
     [Fact]
-    public void ContainsAll_ShouldReturnFalse_WhenOtherHasNoFlags()
+    public void HasFlags_ShouldReturnTrue_WhenOtherHasNoFlags()
     {
         // Arrange
         var thisFlags = ComponentFlags.FromIndex(1);
         var otherFlags = ComponentFlags.None();
 
         // Act
-        var result = thisFlags.ContainsAll(otherFlags);
+        var result = thisFlags.HasFlags(otherFlags);
 
         // Assert
-        Assert.False(result);
+        Assert.True(result);
     }
 
     [Fact]
-    public void ContainsAll_ShouldReturnTrue_WhenThisContainsAllFlagsInOther()
+    public void HasFlags_ShouldReturnTrue_WhenThisContainsAllFlagsInOther()
     {
         // Arrange
         var thisFlags = new ComponentFlags()
@@ -233,14 +233,14 @@ public sealed class ComponentFlagsTests
         var otherFlags = ComponentFlags.FromIndex(1);
 
         // Act
-        var result = thisFlags.ContainsAll(otherFlags);
+        var result = thisFlags.HasFlags(otherFlags);
 
         // Assert
         Assert.True(result);
     }
 
     [Fact]
-    public void ContainsAll_ShouldReturnFalse_WhenThisDoesNotContainAllFlagsInOther()
+    public void HasFlags_ShouldReturnFalse_WhenThisDoesNotContainAllFlagsInOther()
     {
         // Arrange
         var thisFlags = ComponentFlags.FromIndex(1);
@@ -250,14 +250,14 @@ public sealed class ComponentFlagsTests
             .SetFlagAtIndex(3);
 
         // Act
-        var result = thisFlags.ContainsAll(otherFlags);
+        var result = thisFlags.HasFlags(otherFlags);
 
         // Assert
         Assert.False(result);
     }
 
     [Fact]
-    public void ContainsAll_ShouldReturnTrue_WhenBothFlagsAreEqual()
+    public void HasFlags_ShouldReturnTrue_WhenBothFlagsAreEqual()
     {
         // Arrange
         var thisFlags = new ComponentFlags()
@@ -269,7 +269,7 @@ public sealed class ComponentFlagsTests
             .SetFlagAtIndex(2);
 
         // Act
-        var result = thisFlags.ContainsAll(otherFlags);
+        var result = thisFlags.HasFlags(otherFlags);
 
         // Assert
         Assert.True(result);
