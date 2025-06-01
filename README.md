@@ -40,7 +40,7 @@ foreach (var entityFromQuery in query.AsEnumerable())
   var pos = context.Get<Position>(entityFromQuery);
 }
 
-// Create a view from specified query
+// Create a view from a specified query
 var view = query.AsView();
 
 foreach (var entityFromView in view.AsEnumerable())
@@ -51,10 +51,10 @@ foreach (var entityFromView in view.AsEnumerable())
 // Retrieve a component store
 var positionStore = context.UseStore<Position>();
 
-// Retrive an entity store
+// Retrieve an entity store
 var entityStore = context.UseEntityStore();
 
-// Retrive a context state
+// Retrieve a context state
 var state = context.State;
 
 // Destroy an entity

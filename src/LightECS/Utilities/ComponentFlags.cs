@@ -56,14 +56,9 @@ internal readonly struct ComponentFlags :
         return new ComponentFlags(newBits);
     }
 
-    public bool ContainsAll(ComponentFlags other)
+    public bool HasFlags(ComponentFlags other)
     {
-        if (this.HasNoFlags || other.HasNoFlags)
-        {
-            return false;
-        }
-
-        return (this & other) == other;
+        return (this.Bits & other.Bits) == other.Bits;
     }
 
     public bool Equals(ComponentFlags other)
@@ -105,45 +100,4 @@ internal readonly struct ComponentFlags :
                 $"Index {index} must be between 0 and 63 (inclusive).");
         }
     }
-
-    public static ComponentFlags operator |(
-        ComponentFlags left,
-        ComponentFlags right)
-        => new(
-            left.Bits | right.Bits);
-
-    public static ComponentFlags operator &(
-        ComponentFlags left,
-        ComponentFlags right)
-        => new(
-            left.Bits & right.Bits);
-
-    public static ComponentFlags operator ^(
-        ComponentFlags left,
-        ComponentFlags right)
-        => new(
-            left.Bits ^ right.Bits);
-
-    public static ComponentFlags operator ~(
-        ComponentFlags flags)
-        => new(
-            ~flags.Bits);
-
-    public static bool operator ==(
-        ComponentFlags left,
-        ComponentFlags right)
-        => left.Bits == right.Bits;
-
-    public static bool operator !=(
-        ComponentFlags left,
-        ComponentFlags right)
-        => left.Bits != right.Bits;
-
-    public static implicit operator ComponentFlags(
-        ulong bits)
-        => new(bits);
-
-    public static implicit operator ulong(
-        ComponentFlags flags)
-        => flags.Bits;
 }

@@ -78,6 +78,16 @@ public sealed class EntityQuery :
     private bool IsMatchWithComponentFlags(
         ComponentFlags componentFlags)
     {
-        return componentFlags.ContainsAll(_componentFlags);
+        if (_componentFlags.HasNoFlags)
+        {
+            return true;
+        }
+
+        if (componentFlags.HasNoFlags)
+        {
+            return false;
+        }
+
+        return componentFlags.HasFlags(_componentFlags);
     }
 }
