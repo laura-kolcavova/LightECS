@@ -8,20 +8,20 @@ namespace XunitTests.Utilities;
 public sealed class SequentialEntityIdGeneratorTests
 {
     [Fact]
-    public void ReadLastId_ShouldReturnZero_WhenNoIdGenerated()
+    public void ReadId_ShouldReturnOne_WhenNoIdGenerated()
     {
         // Arrange
         var sut = new SequentialEntityIdGenerator();
 
         // Act
-        var currentId = sut.ReadNextId();
+        var currentId = sut.ReadId();
 
         // Assert
-        Assert.Equal(0u, currentId);
+        Assert.Equal(1u, currentId);
     }
 
     [Fact]
-    public void NextId_ShouldIncrementAndReturnId()
+    public void NextId_ShouldIReturnOne_WhenNoIdGenerated()
     {
         // Arrange
         var sut = new SequentialEntityIdGenerator();
@@ -30,20 +30,20 @@ public sealed class SequentialEntityIdGeneratorTests
         var id = sut.NextId();
 
         // Assert
-        Assert.Equal(0u, id);
+        Assert.Equal(1u, id);
     }
 
     [Fact]
-    public void ReadLastId_ShouldReturnLastGeneratedId()
+    public void ReadId_ShouldReturnLastGeneratedId()
     {
         // Arrange
         var sut = new SequentialEntityIdGenerator();
 
-        sut.NextId(); // 0
         sut.NextId(); // 1
+        sut.NextId(); // 2
 
         // Act
-        var current = sut.ReadNextId();
+        var current = sut.ReadId();
 
         // Assert
         Assert.Equal(2u, current);
@@ -65,6 +65,6 @@ public sealed class SequentialEntityIdGeneratorTests
         await Task.WhenAll(tasks);
 
         // Assert
-        Assert.Equal(10000u, provider.ReadNextId());
+        Assert.Equal(10000u, provider.ReadId());
     }
 }
