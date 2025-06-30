@@ -17,7 +17,7 @@ public sealed class EntityPoolTests
         var pool = new EntityPool(
             () => CreateEntity(entityUniqueIdProvider));
 
-        var expectedId = entityUniqueIdProvider.ReadNextId();
+        var expectedId = entityUniqueIdProvider.ReadId();
 
         // Act
         var entity = pool.Get();
