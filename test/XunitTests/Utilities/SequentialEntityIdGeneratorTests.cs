@@ -8,19 +8,6 @@ namespace XunitTests.Utilities;
 public sealed class SequentialEntityIdGeneratorTests
 {
     [Fact]
-    public void ReadId_ShouldReturnOne_WhenNoIdGenerated()
-    {
-        // Arrange
-        var sut = new SequentialEntityIdGenerator();
-
-        // Act
-        var currentId = sut.ReadId();
-
-        // Assert
-        Assert.Equal(1u, currentId);
-    }
-
-    [Fact]
     public void NextId_ShouldIReturnOne_WhenNoIdGenerated()
     {
         // Arrange
@@ -31,6 +18,34 @@ public sealed class SequentialEntityIdGeneratorTests
 
         // Assert
         Assert.Equal(1u, id);
+    }
+
+    [Fact]
+    public void NextId_ShouldIncrementByOne()
+    {
+        // Arrange
+        var sut = new SequentialEntityIdGenerator();
+
+        sut.NextId(); // 1
+
+        // Act
+        var id = sut.NextId();
+
+        // Assert
+        Assert.Equal(2u, id);
+    }
+
+    [Fact]
+    public void ReadId_ShouldReturnZero_WhenNoIdGenerated()
+    {
+        // Arrange
+        var sut = new SequentialEntityIdGenerator();
+
+        // Act
+        var currentId = sut.ReadId();
+
+        // Assert
+        Assert.Equal(0u, currentId);
     }
 
     [Fact]

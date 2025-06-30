@@ -7,7 +7,7 @@ internal sealed class SequentialEntityIdGenerator :
 {
     private readonly object _lock = new();
 
-    private uint _currentEntityId = 1;
+    private uint _currentEntityId = 0;
 
     public uint ReadId()
     {
@@ -18,7 +18,7 @@ internal sealed class SequentialEntityIdGenerator :
     {
         lock (_lock)
         {
-            return _currentEntityId++;
+            return ++_currentEntityId;
         }
     }
 }

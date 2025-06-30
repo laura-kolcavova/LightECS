@@ -12,12 +12,12 @@ public sealed class EntityPoolTests
     public void Get_ShouldReturnNewEntity_WhenPoolIsEmpty()
     {
         // Arrange
-        var entityUniqueIdProvider = new LightECS.Utilities.SequentialEntityIdGenerator();
+        var sequentialEntityIdGenerator = new SequentialEntityIdGenerator();
 
         var pool = new EntityPool(
-            () => CreateEntity(entityUniqueIdProvider));
+            () => CreateEntity(sequentialEntityIdGenerator));
 
-        var expectedId = entityUniqueIdProvider.ReadId();
+        var expectedId = sequentialEntityIdGenerator.ReadId() + 1;
 
         // Act
         var entity = pool.Get();
@@ -230,9 +230,9 @@ public sealed class EntityPoolTests
     }
 
     private Entity CreateEntity(
-        SequentialEntityIdGenerator entityUniqueIdProvider)
+        SequentialEntityIdGenerator sequentialEntityIdGenerator)
     {
-        var id = entityUniqueIdProvider.NextId();
+        var id = sequentialEntityIdGenerator.NextId();
 
         return new Entity(id);
     }
