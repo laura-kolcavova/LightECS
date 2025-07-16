@@ -1,6 +1,12 @@
 # LightECS
 
-LightECS is an attempt to create a lightweight Entity Component System (ECS) library for .NET 8. It provides an API for managing entities and components.
+LightECS is a lightweight Entity Component System (ECS) library for .NET 8. It provides an API for managing entities and components.
+
+> **Note:**  
+> This project is a self-educational hobby project. It is not intended for production use, release, or to compete with or replicate features found in established ECS frameworks. Its purpose is to explore ECS concepts and C#/.NET design.
+
+> **Limitation:**  
+> The current implementation supports a maximum of **64 distinct component types** per entity context. This is a hard limit and cannot be exceeded.
 
 Management of systems is intentionally not included in this library. The main reason is that designing a built-in system scheduler that is scalable, thread-safe, and flexible enough not to constrain users would significantly increase complexity. Therefore, system implementation and orchestration are left to the user.
 
