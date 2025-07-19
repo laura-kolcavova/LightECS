@@ -22,6 +22,25 @@ internal sealed class ComponentFlagIndexRegistry :
     {
         var componentType = typeof(TComponent);
 
+        return Get(componentType);
+    }
+
+    public byte GetOrCreate<TComponent>()
+    {
+        var componentType = typeof(TComponent);
+
+        return GetOrCreate(componentType);
+    }
+
+    public byte Create<TComponent>()
+    {
+        var componentType = typeof(TComponent);
+
+        return Create(componentType);
+    }
+
+    private byte Get(Type componentType)
+    {
         if (!_componentFlagIndexesByType.TryGetValue(
             componentType,
             out var flagIndex))
@@ -33,10 +52,8 @@ internal sealed class ComponentFlagIndexRegistry :
         return flagIndex;
     }
 
-    public byte GetOrCreate<TComponent>()
+    private byte GetOrCreate(Type componentType)
     {
-        var componentType = typeof(TComponent);
-
         lock (_lock)
         {
             if (_componentFlagIndexesByType.TryGetValue(
@@ -46,7 +63,7 @@ internal sealed class ComponentFlagIndexRegistry :
                 return flagIndex;
             }
 
-            flagIndex = _nextFlagIndex++;
+            flagIndex = NextFlagIndex();
 
             _componentFlagIndexesByType.Add(
                 componentType,
@@ -56,10 +73,8 @@ internal sealed class ComponentFlagIndexRegistry :
         }
     }
 
-    public byte Create<TComponent>()
+    private byte Create(Type componentType)
     {
-        var componentType = typeof(TComponent);
-
         lock (_lock)
         {
             if (_componentFlagIndexesByType.ContainsKey(
@@ -69,13 +84,29 @@ internal sealed class ComponentFlagIndexRegistry :
                     $"Component type '{componentType.Name}' is already registered with a flag index.");
             }
 
-            var flagIndex = _nextFlagIndex++;
+            var flagIndex = NextFlagIndex();
 
             _componentFlagIndexesByType.Add(
                 componentType,
                 flagIndex);
 
             return flagIndex;
+        }
+    }
+
+    private byte NextFlagIndex()
+    {
+        ValidateNextFlagIndex();
+
+        return _nextFlagIndex++;
+    }
+
+    private void ValidateNextFlagIndex()
+    {
+        if (_nextFlagIndex >= ComponentFlags.BitsCount)
+        {
+            throw new InvalidOperationException(
+                $"Cannot register more than {ComponentFlags.BitsCount} component types in a single component flag registry.");
         }
     }
 }
